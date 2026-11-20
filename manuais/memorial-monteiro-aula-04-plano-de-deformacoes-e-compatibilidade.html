@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Aula 04</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',Tahoma,sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%); padding:50px 30px 40px; text-align:center; border-bottom:4px solid #e8a33d; }
+  .hero .badge { display:inline-block; background:#e8a33d; color:#1e293b; font-weight:700; padding:4px 14px; border-radius:20px; font-size:.8rem; letter-spacing:1px; margin-bottom:14px; }
+  .hero h1 { font-size:2.2rem; margin:0 0 6px; color:#f8fafc; }
+  .hero .prof { color:#7dd3fc; font-size:.95rem; margin-bottom:10px; }
+  .hero p { color:#94a3b8; max-width:640px; margin:0 auto; font-size:1rem; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .steps-nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .steps-nav a { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:.85rem; transition:.2s; }
+  .steps-nav a:hover { background:#e8a33d; color:#1e293b; border-color:#e8a33d; }
+  section { background:#1e293b; border-radius:14px; padding:30px 32px; margin-bottom:26px; border:1px solid #334155; scroll-margin-top:20px; }
+  .step-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .step-num { background:#e8a33d; color:#1e293b; font-weight:800; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  section h2 { margin:0; font-size:1.35rem; color:#f8fafc; }
+  section h3 { color:#e8a33d; font-size:1.02rem; margin:20px 0 10px; }
+  p { color:#cbd5e1; margin:10px 0; }
+  ol,ul { color:#cbd5e1; padding-left:22px; }
+  li { margin-bottom:6px; }
+  code { background:#0f172a; color:#7dd3fc; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:.9em; }
+  pre { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:16px 18px; overflow-x:auto; margin:14px 0; }
+  pre code { background:none; color:#e2e8f0; padding:0; font-size:.83rem; line-height:1.5; display:block; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  th,td { border:1px solid #334155; padding:8px 10px; text-align:left; color:#cbd5e1; }
+  th { background:#0f172a; color:#e8a33d; }
+  .tip { background:rgba(232,163,61,.1); border-left:4px solid #e8a33d; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fde68a; font-size:.92rem; }
+  .warn { background:rgba(239,68,68,.1); border-left:4px solid #ef4444; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fca5a5; font-size:.92rem; }
+  .ok { background:rgba(34,197,94,.1); border-left:4px solid #22c55e; padding:12px 16px; border-radius:6px; margin:16px 0; color:#86efac; font-size:.92rem; }
+  .checklist { border:1px solid #334155; border-radius:10px; padding:16px 18px; background:#16213a; }
+  .checklist label { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; color:#cbd5e1; cursor:pointer; }
+  footer { text-align:center; color:#64748b; padding:30px; font-size:.85rem; border-top:1px solid #334155; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">MEMORIAL MONTEIRO</div>
+  <h1>Aula 04 — Plano de Deformações e Compatibilidade</h1>
+  <p class="prof">Professor Ricardo Corsini</p>
+  <p>Resumo técnico: o campo cinemático que liga a geometria (Aula 03) à resposta dos materiais (Aula 02).</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#campo">O Campo Afim</a>
+    <a href="#parametros">Três Parâmetros</a>
+    <a href="#caso-reto">Caso Reto (só y)</a>
+    <a href="#caso-obliquo">Caso Oblíquo</a>
+    <a href="#linha-neutra">LN e Gradiente</a>
+    <a href="#ln-fora">LN Fora da Seção</a>
+    <a href="#aderencia">Aderência Perfeita</a>
+    <a href="#translacao">Translação de Eixos</a>
+    <a href="#python">Implementação Python</a>
+    <a href="#matricial">Forma Matricial</a>
+    <a href="#conferencias">Conferências</a>
+    <a href="#equilibrio">Compatibilidade ≠ Equilíbrio</a>
+    <a href="#resumo">Resumo Rápido</a>
+  </div>
+
+  <section id="campo">
+    <div class="step-head"><div class="step-num">1</div><h2>Hipótese de Bernoulli: o Campo Afim</h2></div>
+    <p>Seções planas permanecem planas → campo de deformação longitudinal linear nas coordenadas da seção:</p>
+    <p>$$ \varepsilon(x,y) = \varepsilon_0 + g_x x + g_y y $$</p>
+    <p>Três números ($$\varepsilon_0, g_x, g_y$$) definem a deformação de toda a seção, com milhares de fibras. Convenção: compressão positiva, tração negativa; deformação adimensional ($$0{,}001 = 1\permil$$).</p>
+    <div class="warn">⚠️ Seção plana não significa deformação uniforme — a seção pode girar, apresentando encurtamentos diferentes ponto a ponto.</div>
+  </section>
+
+  <section id="parametros">
+    <div class="step-head"><div class="step-num">2</div><h2>O Significado de Cada Parâmetro</h2></div>
+    <table>
+      <tr><th>Parâmetro</th><th>Unidade</th><th>O que controla</th></tr>
+      <tr><td>$$\varepsilon_0$$</td><td>adimensional</td><td>Deformação na origem</td></tr>
+      <tr><td>$$g_x$$</td><td>mm⁻¹</td><td>Variação de $$\varepsilon$$ em x</td></tr>
+      <tr><td>$$g_y$$</td><td>mm⁻¹</td><td>Variação de $$\varepsilon$$ em y</td></tr>
+    </table>
+    <p>Entre dois pontos A e B: $$\varepsilon_B-\varepsilon_A = g_x(x_B-x_A)+g_y(y_B-y_A)$$. O centroide (origem) não determina a posição da linha neutra.</p>
+  </section>
+
+  <section id="caso-reto">
+    <div class="step-head"><div class="step-num">3</div><h2>Caso Conhecido: Variação Só com a Altura</h2></div>
+    <p>Retângulo 300×600 mm, origem no centroide. Perfil $$\varepsilon(y)=0{,}0010-8{,}0\times10^{-6}y$$, ou seja $$\varepsilon_0=1\permil$$, $$g_y=-8{,}0\times10^{-6}$$ mm⁻¹.</p>
+    <table>
+      <tr><th>y (mm)</th><th>$$\varepsilon$$ (‰)</th><th>Interpretação</th></tr>
+      <tr><td>−300</td><td>+3,4</td><td>compressão na borda inferior</td></tr>
+      <tr><td>0</td><td>+1,0</td><td>compressão na origem</td></tr>
+      <tr><td>+125</td><td>0,0</td><td>linha neutra</td></tr>
+      <tr><td>+300</td><td>−1,4</td><td>tração na borda superior</td></tr>
+    </table>
+    <p>$$ y_{LN} = -\varepsilon_0/g_y = 125 \text{ mm} $$</p>
+  </section>
+
+  <section id="caso-obliquo">
+    <div class="step-head"><div class="step-num">4</div><h2>Caso Oblíquo: as Duas Coordenadas Participam</h2></div>
+    <p>$$ \varepsilon(x,y)=0{,}0004+2{,}0\times10^{-6}x-4{,}0\times10^{-6}y \;\Rightarrow\; y=0{,}5x+100 \text{ (LN)} $$</p>
+    <table>
+      <tr><th>Barra</th><th>$$x_s$$ (mm)</th><th>$$y_s$$ (mm)</th><th>$$\varepsilon_s$$ (‰)</th><th>Situação</th></tr>
+      <tr><td>1</td><td>−100</td><td>−250</td><td>+1,2</td><td>compressão</td></tr>
+      <tr><td>2</td><td>+100</td><td>−250</td><td>+1,6</td><td>compressão</td></tr>
+      <tr><td>3</td><td>+100</td><td>+250</td><td>−0,4</td><td>tração</td></tr>
+      <tr><td>4</td><td>−100</td><td>+250</td><td>−0,8</td><td>tração</td></tr>
+    </table>
+    <div class="tip">💡 Avaliamos um único plano nas coordenadas de todas as barras — não construímos um diagrama independente por barra.</div>
+  </section>
+
+  <section id="linha-neutra">
+    <div class="step-head"><div class="step-num">5</div><h2>Linha Neutra e Direção do Gradiente</h2></div>
+    <p>$$ \varepsilon_0+g_xx+g_yy=0 \text{ (LN)}, \quad \vec g=(g_x,g_y) \perp \text{LN} $$</p>
+    <p>O gradiente aponta para o aumento de $$\varepsilon$$ (lado comprimido). Distância orientada à LN:</p>
+    <p>$$ d_{LN}(x,y)=\frac{\varepsilon_0+g_xx+g_yy}{\|\vec g\|} $$</p>
+    <div class="warn">⚠️ Ângulo do gradiente, direção da LN e direção do vetor de momentos são três coisas diferentes.</div>
+  </section>
+
+  <section id="ln-fora">
+    <div class="step-head"><div class="step-num">6</div><h2>Quando a LN Fica Fora da Seção</h2></div>
+    <p>Mudando $$\varepsilon_0$$ de 0,0004 para 0,0016 (mesmos gradientes), a LN ($$y=0{,}5x+400$$) fica acima de toda a seção de 300×600 mm — toda comprimida, mas com deformações diferentes (mín. +0,1‰, máx. +3,1‰ nos vértices opostos).</p>
+    <table>
+      <tr><th>Condição ($$\vec g=0$$)</th><th>Consequência</th></tr>
+      <tr><td>$$\varepsilon_0>0$$</td><td>Toda a seção comprimida igualmente; sem LN</td></tr>
+      <tr><td>$$\varepsilon_0<0$$</td><td>Toda a seção tracionada igualmente; sem LN</td></tr>
+      <tr><td>$$\varepsilon_0=0$$</td><td>Deformação nula em todo ponto; LN não é única</td></tr>
+    </table>
+    <div class="warn">⚠️ Com $$g_x=g_y=0$$, não se pode dividir por gradiente para localizar LN.</div>
+  </section>
+
+  <section id="aderencia">
+    <div class="step-head"><div class="step-num">7</div><h2>Aderência Perfeita: Mesma Deformação, Tensões Diferentes</h2></div>
+    <p>$$ \varepsilon_{s,j}=\varepsilon(x_{s,j},y_{s,j})=\varepsilon_0+g_xx_{s,j}+g_yy_{s,j} $$</p>
+    <p>O mesmo campo é avaliado nos centros das barras e nos pontos do concreto — sem criar outro plano para o aço. O que muda é a lei constitutiva ($$\sigma_c(\varepsilon)$$ vs. $$\sigma_s(\varepsilon)$$), não a deformação.</p>
+    <div class="warn">⚠️ Concreto tracionado pode ter tensão nula no modelo, mas deformação ≠ 0 — essa região <strong>não</strong> é a linha neutra.</div>
+  </section>
+
+  <section id="translacao">
+    <div class="step-head"><div class="step-num">8</div><h2>Mudar a Origem sem Mudar o Estado Físico</h2></div>
+    <p>Com $$O'$$ em $$(\Delta x,\Delta y)$$ a partir de $$O$$:</p>
+    <p>$$ \varepsilon'_0=\varepsilon_0+g_x\Delta x+g_y\Delta y, \qquad g'_x=g_x,\; g'_y=g_y $$</p>
+    <p>Exemplo ($$\Delta x=50$$, $$\Delta y=100$$ mm): $$\varepsilon'_0=0{,}0001$$. Ponto $$P=(100,200)$$ mm → $$\varepsilon(P)=-0{,}0002$$; nas novas coordenadas $$P'=(50,100)$$ mm → $$\varepsilon'(P')=-0{,}0002$$ — mesmo ponto físico.</p>
+  </section>
+
+  <section id="python">
+    <div class="step-head"><div class="step-num">9</div><h2>Implementação Python: StrainPlane</h2></div>
+    <pre><code>from dataclasses import dataclass
+import numpy as np
+
+@dataclass(frozen=True)
+class StrainPlane:
+    eps0: float
+    gx_per_mm: float
+    gy_per_mm: float
+
+    def strain(self, x_mm, y_mm):
+        x = np.asarray(x_mm, dtype=float)
+        y = np.asarray(y_mm, dtype=float)
+        return self.eps0 + self.gx_per_mm * x + self.gy_per_mm * y</code></pre>
+    <p><code>frozen=True</code> impede reatribuir os campos; <code>np.asarray</code> aceita escalar ou vetor.</p>
+  </section>
+
+  <section id="matricial">
+    <div class="step-head"><div class="step-num">10</div><h2>A Mesma Conta em Forma Matricial</h2></div>
+    <p>$$ \varepsilon = Bq, \quad B=[1\;\;x_i\;\;y_i] \text{ por linha}, \quad q=(\varepsilon_0,g_x,g_y)^T $$</p>
+    <pre><code>B = np.column_stack((np.ones_like(xs), xs, ys))
+q = np.array([plane.eps0, plane.gx_per_mm, plane.gy_per_mm])
+eps_matrix = B @ q</code></pre>
+    <div class="warn">⚠️ Cuidado com broadcasting: manter ambos os vetores com forma (n,), senão <code>(n,1)</code> × <code>(n,)</code> gera matriz (n,n) indesejada.</div>
+  </section>
+
+  <section id="conferencias">
+    <div class="step-head"><div class="step-num">11</div><h2>Conferências do Plano de Deformações</h2></div>
+    <table>
+      <tr><th>Conferência</th><th>Resultado esperado</th></tr>
+      <tr><td>Origem</td><td>$$\varepsilon(0,0)=\varepsilon_0$$</td></tr>
+      <tr><td>Pontos na LN</td><td>Deformação nula</td></tr>
+      <tr><td>Ponto médio A-B</td><td>$$\varepsilon(\tfrac{A+B}{2})=\tfrac{\varepsilon(A)+\varepsilon(B)}{2}$$</td></tr>
+      <tr><td>Translação da origem</td><td>Mesmo resultado físico após atualizar $$\varepsilon_0$$</td></tr>
+      <tr><td>Campo uniforme</td><td>$$g_x=g_y=0 \Rightarrow$$ todos os pontos = $$\varepsilon_0$$</td></tr>
+    </table>
+    <div class="tip">💡 Tolerância usada na apostila: $$10^{-12}$$ em deformação adimensional — verifica a aritmética, não é critério de segurança.</div>
+  </section>
+
+  <section id="equilibrio">
+    <div class="step-head"><div class="step-num">12</div><h2>Compatível ≠ Admissível ≠ Equilibrado</h2></div>
+    <p>$$ (\varepsilon_0,g_x,g_y) \;\longrightarrow\; \varepsilon \;\longrightarrow\; \sigma \;\longrightarrow\; (N,M_x,M_y) $$</p>
+    <table>
+      <tr><th>Condição</th><th>Pergunta</th></tr>
+      <tr><td>Compatibilidade</td><td>O campo respeita seção plana + aderência perfeita?</td></tr>
+      <tr><td>Resposta constitutiva</td><td>Que tensão cada material desenvolve?</td></tr>
+      <tr><td>Limites dos materiais</td><td>Respeita as deformações-limite do modelo?</td></tr>
+      <tr><td>Equilíbrio</td><td>As resultantes batem com a solicitação?</td></tr>
+    </table>
+    <p>Resíduos para o problema inverso: $$ r = (N-N_{Sd},\, M_x-M_{x,Sd},\, M_y-M_{y,Sd})^T $$</p>
+    <div class="warn">⚠️ A curva de interação fixa $$N_{Sd}$$, restringe o plano a um estado-limite, busca $$N_{Rd}\approx N_{Sd}$$ e só então lê $$(M_{x,Rd}, M_{y,Rd})$$ como ponto da curva.</div>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head"><div class="step-num">✓</div><h2>Resumo Rápido para Revisão</h2></div>
+    <div class="checklist">
+      <label><input type="checkbox"> $$\varepsilon=\varepsilon_0+g_xx+g_yy$$ vale para fibras e barras, nas respectivas posições</label>
+      <label><input type="checkbox"> $$\varepsilon_0$$ é deformação na origem; $$g_x, g_y$$ controlam a variação espacial</label>
+      <label><input type="checkbox"> Compressão positiva; coordenadas em mm; gradientes em mm⁻¹</label>
+      <label><input type="checkbox"> LN vem de $$\varepsilon=0$$ — pode cortar, tocar ou ficar fora da seção; não passa necessariamente pelo centroide</label>
+      <label><input type="checkbox"> Gradiente é normal à LN e aponta para o aumento de $$\varepsilon$$</label>
+      <label><input type="checkbox"> $$g_x=g_y=0$$ exige tratamento próprio (sem LN única)</label>
+      <label><input type="checkbox"> Aderência perfeita iguala deformações, não tensões (leis distintas por material)</label>
+      <label><input type="checkbox"> Translação de eixos: $$\varepsilon'_0=\varepsilon_0+g_x\Delta x+g_y\Delta y$$; gradientes não mudam</label>
+      <label><input type="checkbox"> Compatibilidade não garante limites materiais nem equilíbrio — são verificações separadas</label>
+    </div>
+  </section>
+
+</div>
+<footer>Memorial Monteiro · Curso Pilares em Python — Prof. Ricardo Corsini · Aula 04 · Base para motor de cálculo autoral</footer>
+</body>
+</html>

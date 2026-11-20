@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Aula 03</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',Tahoma,sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%); padding:50px 30px 40px; text-align:center; border-bottom:4px solid #e8a33d; }
+  .hero .badge { display:inline-block; background:#e8a33d; color:#1e293b; font-weight:700; padding:4px 14px; border-radius:20px; font-size:.8rem; letter-spacing:1px; margin-bottom:14px; }
+  .hero h1 { font-size:2.2rem; margin:0 0 6px; color:#f8fafc; }
+  .hero .prof { color:#7dd3fc; font-size:.95rem; margin-bottom:10px; }
+  .hero p { color:#94a3b8; max-width:640px; margin:0 auto; font-size:1rem; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .steps-nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .steps-nav a { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:.85rem; transition:.2s; }
+  .steps-nav a:hover { background:#e8a33d; color:#1e293b; border-color:#e8a33d; }
+  section { background:#1e293b; border-radius:14px; padding:30px 32px; margin-bottom:26px; border:1px solid #334155; scroll-margin-top:20px; }
+  .step-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .step-num { background:#e8a33d; color:#1e293b; font-weight:800; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  section h2 { margin:0; font-size:1.35rem; color:#f8fafc; }
+  section h3 { color:#e8a33d; font-size:1.02rem; margin:20px 0 10px; }
+  p { color:#cbd5e1; margin:10px 0; }
+  ol,ul { color:#cbd5e1; padding-left:22px; }
+  li { margin-bottom:6px; }
+  code { background:#0f172a; color:#7dd3fc; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:.9em; }
+  pre { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:16px 18px; overflow-x:auto; margin:14px 0; }
+  pre code { background:none; color:#e2e8f0; padding:0; font-size:.83rem; line-height:1.5; display:block; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  th,td { border:1px solid #334155; padding:8px 10px; text-align:left; color:#cbd5e1; }
+  th { background:#0f172a; color:#e8a33d; }
+  .tip { background:rgba(232,163,61,.1); border-left:4px solid #e8a33d; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fde68a; font-size:.92rem; }
+  .warn { background:rgba(239,68,68,.1); border-left:4px solid #ef4444; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fca5a5; font-size:.92rem; }
+  .ok { background:rgba(34,197,94,.1); border-left:4px solid #22c55e; padding:12px 16px; border-radius:6px; margin:16px 0; color:#86efac; font-size:.92rem; }
+  .checklist { border:1px solid #334155; border-radius:10px; padding:16px 18px; background:#16213a; }
+  .checklist label { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; color:#cbd5e1; cursor:pointer; }
+  footer { text-align:center; color:#64748b; padding:30px; font-size:.85rem; border-top:1px solid #334155; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">MEMORIAL MONTEIRO</div>
+  <h1>Aula 03 — Geometria, Armaduras e Método das Fibras</h1>
+  <p class="prof">Professor Ricardo Corsini</p>
+  <p>Resumo técnico: como representar concreto e aço por pontos de integração (fibras) com área e posição.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#fibra">O que é uma fibra</a>
+    <a href="#malha">Malha retangular</a>
+    <a href="#bordas">Fibras de borda</a>
+    <a href="#vetores">Correspondência de vetores</a>
+    <a href="#barras">Barras discretas</a>
+    <a href="#correcao">Correção do concreto deslocado</a>
+    <a href="#origem">Origem e centroide</a>
+    <a href="#translacao">Translação de eixos</a>
+    <a href="#poligono">Polígonos</a>
+    <a href="#conferencias">Conferências</a>
+    <a href="#convergencia">Convergência</a>
+    <a href="#resumo">Resumo Rápido</a>
+  </div>
+
+  <section id="fibra">
+    <div class="step-head"><div class="step-num">1</div><h2>O que uma Fibra Precisa Representar</h2></div>
+    <p>Uma fibra é um ponto de integração com peso: $$(x_i, y_i, A_i)$$. O ponto diz onde consultar a tensão; a área diz o peso dessa resposta no somatório.</p>
+    <p>$$ N_c \approx \sum_i \sigma_{c,i} A_i, \quad M_{x,c} \approx \sum_i F_{c,i}\,y_i, \quad M_{y,c} \approx \sum_i F_{c,i}\,x_i $$</p>
+    <div class="tip">💡 Unidades: mm, mm², MPa → $$\sigma A$$ dá N; $$\sigma A y$$ dá N·mm. Dividir por $$10^3$$ e $$10^6$$ para kN e kN·m.</div>
+  </section>
+
+  <section id="malha">
+    <div class="step-head"><div class="step-num">2</div><h2>Malha Retangular com Células Iguais</h2></div>
+    <p>Seção 300×600 mm, origem no centroide: $$-150\le x\le150$$, $$-300\le y\le300$$ mm. Com $$n_x=6$$, $$n_y=12$$: $$\Delta x=\Delta y=50$$ mm, 72 fibras de 2 500 mm² cada.</p>
+    <p>Centros nunca nas bordas da grade — sempre no meio do passo: $$x_p = -b/2 + (p+\tfrac12)\Delta x$$.</p>
+    <div class="warn">⚠️ Seis células exigem sete bordas, mas só seis centros. Usar $$\pm b/2$$ como centro de fibra desloca os pesos de integração.</div>
+  </section>
+
+  <section id="bordas">
+    <div class="step-head"><div class="step-num">3</div><h2>Fibras de Borda com Áreas Diferentes</h2></div>
+    <p>Para tamanho-alvo que não divide exatamente a dimensão, repartimos o resto nas duas bordas: ex. larguras <code>[30,80,80,80,30]</code> mm, alturas <code>[40,130,130,130,130,40]</code> mm → 30 fibras, áreas de 1 200 (canto), 3 900 (lateral) e 10 400 mm² (interna).</p>
+    <p>Soma de área sempre recupera $$bh=180\,000$$ mm², mas as forças sob tensão uniforme são diferentes: 12, 39 e 104 kN.</p>
+    <div class="tip">💡 O somatório correto é $$\sum_i \sigma_i A_i$$ — só tirar a área da soma quando todas forem iguais.</div>
+  </section>
+
+  <section id="vetores">
+    <div class="step-head"><div class="step-num">4</div><h2>Três Vetores, Uma Única Correspondência</h2></div>
+    <p>Combinação via <code>np.meshgrid</code> (posições) e <code>np.outer</code> (áreas), depois <code>.ravel()</code> nos três na mesma ordem. O índice $$i$$ precisa continuar apontando para a mesma fibra em $$x_i, y_i, A_i$$ e, depois, $$\varepsilon_i, \sigma_i$$.</p>
+    <div class="warn">⚠️ Trocar a ordem de apenas um vetor aplica a área de uma célula na posição de outra — o programa roda, mas perde o significado geométrico.</div>
+  </section>
+
+  <section id="barras">
+    <div class="step-head"><div class="step-num">5</div><h2>Barras como Elementos Discretos</h2></div>
+    <p>$$(x_{s,j}, y_{s,j}, A_{s,j})$$, com $$A_{s,j}=\pi\phi_j^2/4$$. Barra Ø16 ≈ 201,06 mm²; 8 barras ≈ 1 608,50 mm².</p>
+    <p>Refinar a malha de concreto não move as barras — suas posições e áreas são independentes da discretização.</p>
+  </section>
+
+  <section id="correcao">
+    <div class="step-head"><div class="step-num">6</div><h2>Evitar Contar a Área das Barras Duas Vezes</h2></div>
+    <p>Malha bruta cobre toda a área, inclusive onde há aço. Correção por barra:</p>
+    <p>$$ F_s^{ef} = [\sigma_s(\varepsilon_{s,j}) - \sigma_c(\varepsilon_{s,j})]\,A_{s,j} $$</p>
+    <p>Exemplo: $$A_s=500$$ mm², $$\sigma_s=400$$ MPa, $$\sigma_c=20$$ MPa → força integral do aço 200 kN, concreto já incluído 10 kN, parcela a acrescentar 190 kN (soma recupera 200 kN).</p>
+    <div class="ok">✅ Convenção do curso: <strong>malha bruta</strong> + correção $$[\sigma_s-\sigma_c]A_s$$ por barra (não remover geometricamente a área das barras).</div>
+  </section>
+
+  <section id="origem">
+    <div class="step-head"><div class="step-num">7</div><h2>Origem, Centroide Geométrico e Centroide da Malha</h2></div>
+    <p>Referência padrão: centroide da área bruta de concreto (sem seção transformada). Centroide ponderado por área:</p>
+    <p>$$ x_{C,m} = \frac{\sum_i A_i x_i}{\sum_i A_i}, \quad y_{C,m} = \frac{\sum_i A_i y_i}{\sum_i A_i} $$</p>
+    <div class="warn">⚠️ Centrar o concreto não zera o momento total — armadura assimétrica pode gerar momento mesmo sob deformação uniforme.</div>
+  </section>
+
+  <section id="translacao">
+    <div class="step-head"><div class="step-num">8</div><h2>Mudança de Origem Altera os Braços, Não as Forças</h2></div>
+    <p>$$ M'_x = M_x - N\Delta y, \qquad M'_y = M_y - N\Delta x $$</p>
+    <p>Exemplo: concreto 300×600 mm, tensão uniforme 10 MPa, $$N=1\,800$$ kN. Em $$C$$: $$M_x=0$$. Com $$O'$$ 100 mm acima: $$M'_x = -1\,800\times0{,}100=-180$$ kN·m — mesma força, outra descrição.</p>
+  </section>
+
+  <section id="poligono">
+    <div class="step-head"><div class="step-num">9</div><h2>Polígonos: Área, Centroide e Malha</h2></div>
+    <p>Vértices em sequência (não aleatórios). Área orientada e centroide exato:</p>
+    <p>$$ c_k = x_ky_{k+1}-x_{k+1}y_k,\quad A_o=\tfrac12\sum_k c_k,\quad x_C=\frac{\sum_k(x_k+x_{k+1})c_k}{6A_o} $$</p>
+    <p>Exemplo trapézio: vértices (0,0), (300,0), (180,600), (0,600) mm → $$A_c=144\,000$$ mm², $$C=(122{,}5;\,275)$$ mm — <strong>não</strong> é a média dos vértices (120, 300).</p>
+    <p><strong>Teste pelo centro</strong> (usado no curso): mantém a célula inteira se o centro cai dentro do polígono; produz borda "em degraus" (erro de ~2,5% na área no exemplo da apostila). Não trata vazios internos nem recorte exato de borda.</p>
+  </section>
+
+  <section id="conferencias">
+    <div class="step-head"><div class="step-num">10</div><h2>Conferências Mínimas da Camada Geométrica</h2></div>
+    <table>
+      <tr><th>Conferência</th><th>O que revela</th></tr>
+      <tr><td>Valores finitos, $$A_i>0$$</td><td>Coordenadas inválidas ou áreas nulas/negativas</td></tr>
+      <tr><td>Tamanhos dos vetores</td><td>Correspondência entre $$x_i, y_i, A_i$$</td></tr>
+      <tr><td>Área e centroide da malha</td><td>Pesos e posições reproduzem o contorno</td></tr>
+      <tr><td>Simetria sob tensão uniforme</td><td>Momentos próximos de zero no caso centrado</td></tr>
+    </table>
+    <p>Malha de referência (30 fibras): $$A_m=180\,000$$ mm², centroide (0,0), área mínima 1 200 e máxima 10 400 mm². Trapézio: $$A_c=144\,000$$ mm², $$C=(122{,}5,\,275)$$ mm — inverter a ordem dos vértices preserva área e centroide.</p>
+  </section>
+
+  <section id="convergencia">
+    <div class="step-head"><div class="step-num">11</div><h2>Área Exata Não Garante Integração Convergida</h2></div>
+    <p>Campo prescrito $$\sigma_c(y)=20[\max(y/300,0)]^2$$ MPa no retângulo 300×600 mm. Exato: $$N_c=600$$ kN, $$M_{x,c}=135$$ kN·m.</p>
+    <table>
+      <tr><th>Malha</th><th>$$n_f$$</th><th>$$N_c$$ (kN)</th><th>$$M_{x,c}$$ (kN·m)</th><th>Erro $$M_x$$</th></tr>
+      <tr><td>5×10</td><td>50</td><td>594,00</td><td>132,30</td><td>2,00%</td></tr>
+      <tr><td>10×20</td><td>200</td><td>598,50</td><td>134,33</td><td>0,50%</td></tr>
+      <tr><td>20×40</td><td>800</td><td>599,63</td><td>134,83</td><td>0,125%</td></tr>
+      <tr><td>40×80</td><td>3 200</td><td>599,91</td><td>134,96</td><td>0,031%</td></tr>
+    </table>
+    <div class="tip">💡 Sequência de refinamento sugerida: 20×40 → 40×80 → 80×160. Comparar resultantes, não só área e centroide.</div>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head"><div class="step-num">✓</div><h2>Resumo Rápido para Revisão</h2></div>
+    <div class="checklist">
+      <label><input type="checkbox"> Fibra = posição + área; o centro sozinho não determina a contribuição</label>
+      <label><input type="checkbox"> Vetores $$x_i, y_i, A_i$$ (e depois $$\varepsilon_i, \sigma_i$$) precisam manter a mesma ordem/índice</label>
+      <label><input type="checkbox"> Barras têm posição e área próprias — refinar a malha de concreto não as move</label>
+      <label><input type="checkbox"> Malha bruta + correção $$[\sigma_s-\sigma_c]A_s$$ por barra, evitando contar a área 2×</label>
+      <label><input type="checkbox"> Origem padrão = centroide da área bruta de concreto</label>
+      <label><input type="checkbox"> Translação de eixos: $$M'_x=M_x-N\Delta y$$, $$M'_y=M_y-N\Delta x$$</label>
+      <label><input type="checkbox"> Polígono: centroide vem do contorno, não da média dos vértices</label>
+      <label><input type="checkbox"> Área exata ≠ integração convergida — sempre refinar e comparar</label>
+    </div>
+  </section>
+
+</div>
+<footer>Memorial Monteiro · Curso Pilares em Python — Prof. Ricardo Corsini · Aula 03 · Base para motor de cálculo autoral</footer>
+</body>
+</html>

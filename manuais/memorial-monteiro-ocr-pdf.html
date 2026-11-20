@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Extração de Texto de PDFs Digitalizados (OCR)</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+  .hero { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 50px 30px 40px; text-align: center; border-bottom: 4px solid #e8a33d; }
+  .hero h1 { font-size: 2.3rem; margin: 0 0 6px; color: #f8fafc; }
+  .hero .badge { display: inline-block; background: #e8a33d; color: #1e293b; font-weight: 700; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 14px; }
+  .hero p { color: #94a3b8; max-width: 680px; margin: 0 auto; font-size: 1rem; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+  .steps-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+  .steps-nav a { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; transition: .2s; }
+  .steps-nav a:hover { background: #e8a33d; color: #1e293b; border-color: #e8a33d; }
+  section { background: #1e293b; border-radius: 14px; padding: 30px 32px; margin-bottom: 26px; border: 1px solid #334155; scroll-margin-top: 20px; }
+  .step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .step-num { background: #e8a33d; color: #1e293b; font-weight: 800; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  section h2 { margin: 0; font-size: 1.4rem; color: #f8fafc; }
+  section h3 { color: #e8a33d; font-size: 1.05rem; margin: 22px 0 10px; }
+  p { color: #cbd5e1; margin: 10px 0; }
+  ol, ul { color: #cbd5e1; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code { background: #0f172a; color: #7dd3fc; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.9em; }
+  pre { background: #0b1220; border: 1px solid #334155; border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 14px 0; }
+  pre code { background: none; color: #e2e8f0; padding: 0; font-size: 0.85rem; line-height: 1.5; display: block; white-space: pre; }
+  .tip  { background: rgba(232,163,61,0.1); border-left: 4px solid #e8a33d; padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #fde68a; font-size: 0.92rem; }
+  .warn { background: rgba(239,68,68,0.1);  border-left: 4px solid #ef4444; padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #fca5a5; font-size: 0.92rem; }
+  .ok   { background: rgba(34,197,94,0.1);  border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #86efac; font-size: 0.92rem; }
+  .faq { border: 1px solid #334155; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; background: #16213a; }
+  .faq .q { font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+  .faq .a { color: #cbd5e1; font-size: 0.95rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+  th, td { border: 1px solid #334155; padding: 8px 12px; text-align: left; color: #cbd5e1; vertical-align: top; }
+  th { background: #0f172a; color: #e8a33d; }
+  footer { text-align: center; color: #64748b; padding: 30px; font-size: 0.85rem; border-top: 1px solid #334155; }
+  @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } .hero h1 { font-size: 1.6rem; } section { padding: 22px 18px; } }
+  @media print {
+    body { background: #fff; color: #111; }
+    .hero { background: #fff; border-bottom: 3px solid #e8a33d; }
+    .hero h1, section h2 { color: #0b3d91; }
+    section { background: #fff; border: 1px solid #bbb; page-break-inside: avoid; }
+    p, li, td, .faq .a { color: #222; }
+    pre { background: #f4f4f4; border: 1px solid #ccc; }
+    pre code { color: #111; white-space: pre-wrap; }
+    code { background: #eee; color: #0b3d91; }
+    .tip, .warn, .ok { color: #222; }
+    .faq { background: #fafafa; }
+    .steps-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">CONHECIMENTO INTERNO</div>
+  <h1>📄 Memorial Monteiro</h1>
+  <p>Extração de texto de PDFs digitalizados com OCR: instalação, comandos, fluxo de trabalho e conferência técnica. Aprendido no trabalho histórico com a NB-1/1960, a NB-1/1978 e as Recomendações do CEB (edição de 1972).</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#oque">O que é</a>
+    <a href="#diag">Diagnóstico</a>
+    <a href="#p1">1. Instalar</a>
+    <a href="#p2">2. PATH</a>
+    <a href="#p3">3. Pasta certa</a>
+    <a href="#p4">4. OCR</a>
+    <a href="#p5">5. Sidecar</a>
+    <a href="#p6">6. Organizar</a>
+    <a href="#p7">7. Conferir</a>
+    <a href="#erros">Problemas</a>
+    <a href="#faq">Dúvidas</a>
+    <a href="#resumo">Resumo</a>
+  </div>
+
+  <!-- O QUE É -->
+  <section id="oque">
+    <div class="step-head"><div class="step-num">★</div><h2>O que é OCR e por que ele é necessário</h2></div>
+    <p>Um PDF <strong>digitalizado</strong> (escaneado) é só uma sequência de <strong>imagens</strong> das páginas, sem texto por baixo. Extratores como o <code>pdfplumber</code> não têm o que extrair nesse caso.</p>
+    <p>O <strong>OCR</strong> (reconhecimento óptico de caracteres) "lê" a imagem e cria uma camada de texto. Neste fluxo usamos três ferramentas:</p>
+    <table>
+      <tr><th>Ferramenta</th><th>Função</th></tr>
+      <tr><td><strong>OCRmyPDF</strong></td><td>Programa Python que coordena o processo e gera o PDF pesquisável e o TXT</td></tr>
+      <tr><td><strong>Tesseract</strong></td><td>Motor de OCR que de fato reconhece as letras (idiomas <code>por</code>, <code>fra</code>)</td></tr>
+      <tr><td><strong>Ghostscript</strong></td><td>Lê e reescreve os arquivos PDF</td></tr>
+    </table>
+    <div class="tip">💡 Pense assim: o OCR é uma <strong>ferramenta de localização e leitura inicial</strong>. Ele não substitui a página impressa como fonte do dado técnico.</div>
+  </section>
+
+  <!-- DIAGNÓSTICO -->
+  <section id="diag">
+    <div class="step-head"><div class="step-num">?</div><h2>Diagnóstico: o PDF precisa de OCR?</h2></div>
+    <table>
+      <tr><th>Sintoma</th><th>Conclusão</th></tr>
+      <tr><td>O TXT extraído só traz <code>sem texto extraível</code> em todas as páginas</td><td>✅ PDF digitalizado: precisa de OCR</td></tr>
+      <tr><td>No PDF não dá para selecionar o texto com o mouse</td><td>✅ Precisa de OCR</td></tr>
+      <tr><td>O TXT sai legível, em ordem</td><td>Não precisa: use direto</td></tr>
+      <tr><td>O TXT sai com letras soltas e linhas misturadas</td><td>OCR fraco ou ordem de leitura errada: refaça com <code>--sidecar</code> (passo 5)</td></tr>
+    </table>
+    <div class="ok">✅ Caso real: os primeiros arquivos da CEB (<code>Estrutura_70-71_parte1..3</code>, 110 páginas) vieram inteiros com "sem texto extraível". Depois do OCR, passaram a trazer texto.</div>
+  </section>
+
+  <!-- PASSO 1 -->
+  <section id="p1">
+    <div class="step-head"><div class="step-num">1</div><h2>Instalar as ferramentas (uma vez só)</h2></div>
+    <h3>1.1 OCRmyPDF (terminal do VS Code)</h3>
+    <pre><code>pip install ocrmypdf</code></pre>
+    <div class="tip">💡 Pode aparecer um aviso vermelho de conflito de versão com o Streamlit. Ele não impede o OCR e pode ser ignorado.</div>
+
+    <h3>1.2 Programas do Windows</h3>
+    <ul>
+      <li><strong>Tesseract:</strong> <a href="https://github.com/UB-Mannheim/tesseract/wiki" style="color:#7dd3fc">github.com/UB-Mannheim/tesseract/wiki</a>. No instalador, em <em>Additional language data</em>, marque <strong>Portuguese</strong> e <strong>French</strong>.</li>
+      <li><strong>Ghostscript:</strong> <a href="https://ghostscript.com/releases/gsdnld.html" style="color:#7dd3fc">ghostscript.com/releases/gsdnld.html</a>, versão Windows 64-bit (AGPL).</li>
+    </ul>
+    <div class="warn">⚠️ Depois de instalar, <strong>feche e abra o VS Code</strong>. Sem isso, o terminal não enxerga os programas novos.</div>
+
+    <h3>1.3 Faltou o francês? Instale depois</h3>
+    <p>Abra o PowerShell <strong>como Administrador</strong> e rode:</p>
+    <pre><code>Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata/raw/main/fra.traineddata" -OutFile "C:\Program Files\Tesseract-OCR\tessdata\fra.traineddata"</code></pre>
+    <div class="tip">💡 Se o texto está em português (como a tradução da CEB publicada na revista), <code>-l por</code> basta. Colocar idiomas sem necessidade pode piorar o resultado.</div>
+  </section>
+
+  <!-- PASSO 2 -->
+  <section id="p2">
+    <div class="step-head"><div class="step-num">2</div><h2>Testar a instalação e ajustar o PATH</h2></div>
+    <pre><code>tesseract --version
+gswin64c --version
+tesseract --list-langs</code></pre>
+    <p>Os dois primeiros devem mostrar um número de versão. O terceiro deve listar <code>por</code> e, se instalado, <code>fra</code>.</p>
+
+    <h3>Se der "não é reconhecido"</h3>
+    <p>Primeiro confirme se os programas foram instalados:</p>
+    <pre><code>Test-Path "C:\Program Files\Tesseract-OCR\tesseract.exe"
+Get-ChildItem "C:\Program Files\gs" -Recurse -Filter gswin64c.exe</code></pre>
+    <p>Se existirem, adicione as pastas ao PATH do usuário (de forma permanente):</p>
+    <pre><code>[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\Program Files\Tesseract-OCR;C:\Program Files\gs\gs10.08.0\bin", "User")</code></pre>
+    <div class="warn">⚠️ Troque <code>gs10.08.0</code> pela versão que apareceu no seu computador. Neste trabalho, uma versão antiga indicada (<code>gs10.05.1</code>) não batia com a instalada (<code>gs10.08.0</code>). Depois de ajustar, feche e abra o VS Code e teste de novo.</div>
+  </section>
+
+  <!-- PASSO 3 -->
+  <section id="p3">
+    <div class="step-head"><div class="step-num">3</div><h2>Ir para a pasta certa ANTES de qualquer comando</h2></div>
+    <p>Foi o erro mais repetido. O terminal do VS Code costuma abrir em:</p>
+    <pre><code>C:\Users\55169\AppData\Local\Programs\Microsoft VS Code</code></pre>
+    <p>Ali não há PDF nenhum, então os comandos rodam "sem erro" e não geram nada. Sempre faça:</p>
+    <pre><code>cd "C:\Users\55169\Downloads\EXTRAIR-PDF"
+Get-ChildItem *.pdf | Select-Object Name</code></pre>
+    <div class="ok">✅ Se os nomes dos PDFs aparecerem, você está no lugar certo. Copie o nome <strong>real</strong> do arquivo e não use nomes de exemplo como <code>NOME_DO_ARQUIVO.pdf</code>.</div>
+    <div class="tip">💡 Para não esquecer: no VS Code, use <strong>File → Open Folder</strong> e abra a pasta do projeto. Todo terminal novo já começa nela. O mesmo vale para scripts como o <code>gera_manual.py</code>: ou faça <code>cd</code> até a pasta, ou rode com o caminho completo.</div>
+  </section>
+
+  <!-- PASSO 4 -->
+  <section id="p4">
+    <div class="step-head"><div class="step-num">4</div><h2>Rodar o OCR básico</h2></div>
+    <h3>Um arquivo</h3>
+    <pre><code>ocrmypdf -l por --force-ocr "arquivo.pdf" "arquivo_OCR.pdf"</code></pre>
+    <h3>Todos os PDFs da pasta (ignorando os que já são _OCR)</h3>
+    <pre><code>Get-ChildItem *.pdf | Where-Object { $_.Name -notlike "*_OCR.pdf" } | ForEach-Object {
+    ocrmypdf -l por --force-ocr $_.FullName ($_.DirectoryName + "\" + $_.BaseName + "_OCR.pdf")
+}</code></pre>
+    <table>
+      <tr><th>Opção</th><th>Significado</th></tr>
+      <tr><td><code>-l por</code></td><td>Idioma português (<code>por+fra</code> para os dois)</td></tr>
+      <tr><td><code>--force-ocr</code></td><td>Refaz o OCR mesmo que o PDF já tenha alguma camada de texto</td></tr>
+    </table>
+    <div class="tip">💡 Demora alguns minutos por arquivo. Espere o terminal liberar antes do próximo comando.</div>
+  </section>
+
+  <!-- PASSO 5 -->
+  <section id="p5">
+    <div class="step-head"><div class="step-num">5</div><h2>OCR com --sidecar (o método que funcionou melhor)</h2></div>
+    <p>Na primeira tentativa, o texto foi tirado do PDF OCR pelo <code>pdfplumber</code> e saiu embaralhado, porque ele mistura as colunas. O <code>--sidecar</code> grava o TXT direto do Tesseract, na ordem de leitura dele.</p>
+    <h3>A partir dos PDFs originais</h3>
+    <pre><code>Get-ChildItem *.pdf | Where-Object { $_.Name -notlike "*_OCR*.pdf" } | ForEach-Object {
+    ocrmypdf -l por --force-ocr --deskew --rotate-pages `
+      --sidecar ($_.DirectoryName + "\" + $_.BaseName + "_OCR.txt") `
+      $_.FullName ($_.DirectoryName + "\" + $_.BaseName + "_OCR.pdf")
+}</code></pre>
+    <h3>Se só existirem os _OCR.pdf (gera com outro nome para não sobrescrever)</h3>
+    <pre><code>Get-ChildItem *_OCR.pdf | ForEach-Object {
+    ocrmypdf -l por --force-ocr --deskew --rotate-pages `
+      --sidecar ($_.DirectoryName + "\" + $_.BaseName + "2.txt") `
+      $_.FullName ($_.DirectoryName + "\" + $_.BaseName + "2.pdf")
+}</code></pre>
+    <table>
+      <tr><th>Opção</th><th>Significado</th></tr>
+      <tr><td><code>--sidecar</code></td><td>Salva o texto reconhecido direto num .txt</td></tr>
+      <tr><td><code>--deskew</code></td><td>Endireita páginas tortas do scan</td></tr>
+      <tr><td><code>--rotate-pages</code></td><td>Gira páginas que estão de lado ou de ponta-cabeça</td></tr>
+      <tr><td><code>`</code> (crase)</td><td>Continua o comando na linha seguinte, no PowerShell</td></tr>
+    </table>
+    <div class="ok">✅ Resultado real (<code>Estrutura_70-71_OCR2.txt</code>): as páginas de uma coluna saíram legíveis e em ordem (Apresentação A1–A5, Preâmbulo R.0, R.01, comentários R.0/R.11). Com o sidecar, não é preciso rodar o extrator de novo.</div>
+    <div class="warn">⚠️ Continuam frágeis: <strong>páginas em duas colunas, tabelas e fórmulas</strong>. Se as colunas seguirem misturadas, a solução é cortar cada folha em duas páginas antes do OCR.</div>
+  </section>
+
+  <!-- PASSO 6 -->
+  <section id="p6">
+    <div class="step-head"><div class="step-num">6</div><h2>Organizar a pasta e dividir o envio</h2></div>
+    <p>Separe os originais dos processados para não processar tudo duas vezes:</p>
+    <pre><code>New-Item -ItemType Directory -Name "ORIGINAIS" -Force
+Get-ChildItem *.pdf | Where-Object { $_.Name -notlike "*_OCR*.pdf" } | Move-Item -Destination "ORIGINAIS"</code></pre>
+    <p>Se for usar o extrator (método antigo, sobre os _OCR.pdf):</p>
+    <pre><code>python "C:\Users\55169\Downloads\EXTRAIR-PDF\extratorpdf_bl.py"</code></pre>
+    <div class="warn">⚠️ <code>Remove-Item *.txt</code> apaga <strong>todos</strong> os TXT da pasta. Só use depois de confirmar que são os antigos/vazios e que serão gerados de novo.</div>
+    <h3>Convenção de nomes usada</h3>
+    <table>
+      <tr><th>Arquivo</th><th>O que é</th></tr>
+      <tr><td><code>Estrutura_70-71.pdf</code></td><td>Original digitalizado (guardar em ORIGINAIS)</td></tr>
+      <tr><td><code>Estrutura_70-71_OCR.pdf</code></td><td>PDF pesquisável</td></tr>
+      <tr><td><code>Estrutura_70-71_OCR2.txt</code></td><td>Texto do sidecar</td></tr>
+      <tr><td><code>..._OCR_parte1_pags59-63.txt</code></td><td>Bloco pequeno para revisão (5 páginas do PDF)</td></tr>
+    </table>
+    <div class="tip">💡 Blocos de cerca de 5 páginas do PDF (<code>PAGINA_INICIAL</code> / <code>PAGINA_FINAL</code>) permitem revisar com atenção e pedir prints só das páginas duvidosas.</div>
+  </section>
+
+  <!-- PASSO 7 -->
+  <section id="p7">
+    <div class="step-head"><div class="step-num">7</div><h2>Conferência técnica: a regra de ouro</h2></div>
+    <div class="warn">⚠️ <strong>Nenhum número, fórmula, unidade, sinal ou valor de tabela vindo do OCR pode ser citado sem conferir na imagem original do PDF.</strong></div>
+    <h3>Regras de transcrição</h3>
+    <ol>
+      <li>Registre <strong>página do PDF</strong> e <strong>página impressa</strong> da revista: <code>[p. 126 | PDF 64]</code>.</li>
+      <li>Preserve a numeração do item normativo como impressa: <code>R.43,145</code>, <code>C.43,222-1</code>.</li>
+      <li>Não complete lacunas nem "corrija" o impresso em silêncio.</li>
+      <li>Use marcadores claros: <code>[ILEGÍVEL]</code>, <code>[conferir]</code>, <code>[FÓRMULA ILEGÍVEL]</code>, <code>[OCR "x" — conferir]</code>.</li>
+      <li>Quando o impresso parece errado, <strong>mantenha o impresso</strong> e anote a dúvida à parte.</li>
+      <li>Refaça as contas dos exemplos: elas revelam números mal lidos.</li>
+      <li>Peça ou tire <strong>print</strong> das páginas onde o TXT não permite decidir.</li>
+    </ol>
+
+    <h3>Casos reais que ensinaram a regra</h3>
+    <table>
+      <tr><th>Página</th><th>OCR leu</th><th>Lição</th></tr>
+      <tr><td>p. 106</td><td>"1978"</td><td>O print mostrou "Londres em 1973". O impresso prevaleceu.</td></tr>
+      <tr><td>p. 106</td><td><code>x = l_e</code></td><td>A teoria sugere <code>l_e/2</code>, mas mantém-se o impresso, com a dúvida anotada.</td></tr>
+      <tr><td>p. 107</td><td>—</td><td>O print confirmou N_d "superior à metade" de N_cu, o que indica erro de impressão numa ocorrência anterior. Preservar e anotar.</td></tr>
+      <tr><td>p. 108</td><td>"1,8"</td><td>R.42,231 aponta para 1,2. Conferir no impresso.</td></tr>
+      <tr><td>p. 111</td><td>quadro de fissuração</td><td>Valores de tabela mal lidos: só a imagem resolve.</td></tr>
+      <tr><td>p. 125</td><td>"56" e "84"</td><td>Eram 5,6 t e 8,4 t, confirmados pelo 8400 kg da página seguinte.</td></tr>
+      <tr><td>p. 127</td><td>"86 cm"</td><td>A conta 100 × 0,71 / 1,97 dá 36 cm. Conferir no impresso.</td></tr>
+    </table>
+
+    <h3>Separar fato de interpretação</h3>
+    <div class="grid2">
+      <div class="ok"><strong>Fato observado:</strong><br>o que está impresso na página (confirmado pela imagem).</div>
+      <div class="tip"><strong>Interpretação:</strong><br>hipóteses de correção, deduções por cálculo e comparação com a teoria. Sempre marcadas como tal.</div>
+    </div>
+    <div class="tip">💡 A referência bibliográfica sai da <strong>capa</strong>, não do nome do arquivo. "Estrutura_70-71" não basta: título e ano exatos da CEB (tratada aqui como edição de 1972) devem ser conferidos na capa. Documentos históricos (CEB 1972, Boletins n.º 87 e n.º 92, NB-1/1960, NB-1/1978) nunca são apresentados como norma vigente.</div>
+  </section>
+
+  <!-- ERROS -->
+  <section id="erros">
+    <div class="step-head"><div class="step-num">!</div><h2>Problemas comuns</h2></div>
+    <table>
+      <tr><th>Sintoma</th><th>Causa</th><th>Solução</th></tr>
+      <tr><td>TXT com "sem texto extraível"</td><td>PDF é só imagem</td><td>Passos 4 ou 5</td></tr>
+      <tr><td><code>tesseract</code> / <code>gswin64c</code> não reconhecido</td><td>Não instalado ou fora do PATH</td><td>Passo 2, depois reabrir o VS Code</td></tr>
+      <tr><td>Erro de idioma <code>fra</code></td><td>Francês não instalado</td><td>Seção 1.3 ou usar só <code>-l por</code></td></tr>
+      <tr><td>Comando roda e nada é gerado</td><td>Terminal na pasta do VS Code</td><td>Passo 3 (<code>cd</code>)</td></tr>
+      <tr><td>Arquivo não encontrado</td><td>Usou nome de exemplo</td><td><code>Get-ChildItem *.pdf</code> e copiar o nome real</td></tr>
+      <tr><td>Pasta ORIGINAIS não existe</td><td>Passo de mover não foi executado</td><td>Rodar na própria pasta ou criar com o passo 6</td></tr>
+      <tr><td>Texto com letras soltas e linhas intercaladas</td><td>Duas colunas lidas juntas</td><td><code>--sidecar</code>; se persistir, cortar folhas em duas</td></tr>
+      <tr><td>Fórmulas e tabelas destruídas</td><td>Limite do OCR</td><td>Transcrever pelo print / imagem</td></tr>
+      <tr><td>Aviso vermelho do Streamlit no <code>pip</code></td><td>Conflito de versão</td><td>Ignorar</td></tr>
+      <tr><td>Bloqueio ao ativar <code>.venv</code></td><td>Política de execução</td><td><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></td></tr>
+    </table>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="step-head"><div class="step-num">?</div><h2>Dúvidas Frequentes</h2></div>
+    <div class="faq"><div class="q">O OCR estraga o PDF original?</div><div class="a"><strong>Não.</strong> Ele grava um arquivo novo (<code>_OCR.pdf</code>). Mesmo assim, guarde os originais em <code>ORIGINAIS</code>.</div></div>
+    <div class="faq"><div class="q">Preciso rodar o extrator depois do sidecar?</div><div class="a">Não. O <code>--sidecar</code> já entrega o TXT. O extrator só é útil quando você quer dividir o texto por páginas ou blocos.</div></div>
+    <div class="faq"><div class="q">Posso confiar num número que o OCR leu "bonito"?</div><div class="a">Não. O OCR troca 3↔8, 1↔7, 5↔6 e 0,5↔9,5 com frequência. Confira todo valor técnico na imagem.</div></div>
+    <div class="faq"><div class="q">Quando instalar o OCR no ambiente virtual?</div><div class="a">Num projeto organizado, crie o <code>.venv</code> (<code>python -m venv .venv</code>, <code>.venv\Scripts\activate</code>) e instale o <code>ocrmypdf</code> dentro dele. Tesseract e Ghostscript ficam no Windows, fora do venv.</div></div>
+    <div class="faq"><div class="q">Como limpo o terminal?</div><div class="a"><code>clear</code>, <code>cls</code> ou Ctrl + L no terminal do VS Code.</div></div>
+  </section>
+
+  <!-- RESUMO -->
+  <section id="resumo">
+    <div class="step-head"><div class="step-num">✓</div><h2>Resumo Rápido para o Dia a Dia</h2></div>
+    <p><strong>Primeira vez no computador:</strong></p>
+    <ol>
+      <li><code>pip install ocrmypdf</code></li>
+      <li>Instalar Tesseract (por + fra) e Ghostscript</li>
+      <li>Reabrir o VS Code e testar: <code>tesseract --version</code>, <code>gswin64c --version</code>, <code>tesseract --list-langs</code></li>
+    </ol>
+    <p><strong>Cada lote de PDFs:</strong></p>
+    <ol>
+      <li><code>cd "C:\Users\55169\Downloads\EXTRAIR-PDF"</code></li>
+      <li><code>Get-ChildItem *.pdf | Select-Object Name</code></li>
+      <li>Rodar o OCR com <code>--sidecar --deskew --rotate-pages</code> (passo 5)</li>
+      <li>Mover os originais para <code>ORIGINAIS</code></li>
+      <li>Abrir o TXT e conferir se está legível</li>
+      <li>Revisar em blocos de cerca de 5 páginas, marcando <code>[ILEGÍVEL]</code> / <code>[conferir]</code></li>
+      <li>Conferir números, fórmulas e tabelas na imagem original</li>
+    </ol>
+    <div class="tip">O OCR localiza; a página impressa confirma; o engenheiro decide.</div>
+  </section>
+
+</div>
+
+<footer>Memorial Monteiro · Conhecimento interno · Extração de PDFs digitalizados com OCR · Luciano</footer>
+
+</body>
+</html>

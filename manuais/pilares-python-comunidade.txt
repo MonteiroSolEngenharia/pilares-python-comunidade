@@ -1,0 +1,11 @@
+pilares-python-comunidade/
+├── README.md
+├── LICENSE
+├── codigo/
+│   ├── materiais.py
+│   └── testes/
+│       └── test_materiais.py
+├── manuais/
+│   └── (memoriais em PDF/Word)
+└── aulas/
+    └── (resumos, se publicar)

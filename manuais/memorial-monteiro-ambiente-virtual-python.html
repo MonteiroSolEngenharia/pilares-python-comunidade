@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Ambiente Virtual</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    padding: 50px 30px 40px;
+    text-align: center;
+    border-bottom: 4px solid #e8a33d;
+  }
+  .hero h1 { font-size: 2.3rem; margin: 0 0 6px; color: #f8fafc; }
+  .hero .badge {
+    display: inline-block;
+    background: #e8a33d;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .hero p { color: #94a3b8; max-width: 620px; margin: 0 auto; font-size: 1rem; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+  .steps-nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+  .steps-nav a {
+    background: #1e293b; border: 1px solid #334155; color: #cbd5e1;
+    padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; transition: .2s;
+  }
+  .steps-nav a:hover { background: #e8a33d; color: #1e293b; border-color: #e8a33d; }
+  section {
+    background: #1e293b; border-radius: 14px; padding: 30px 32px;
+    margin-bottom: 26px; border: 1px solid #334155; scroll-margin-top: 20px;
+  }
+  .step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .step-num {
+    background: #e8a33d; color: #1e293b; font-weight: 800;
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+  }
+  section h2 { margin: 0; font-size: 1.4rem; color: #f8fafc; }
+  section h3 { color: #e8a33d; font-size: 1.05rem; margin: 22px 0 10px; }
+  p { color: #cbd5e1; margin: 10px 0; }
+  ol, ul { color: #cbd5e1; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code {
+    background: #0f172a; color: #7dd3fc; padding: 2px 6px; border-radius: 4px;
+    font-family: Consolas, monospace; font-size: 0.9em;
+  }
+  pre {
+    background: #0b1220; border: 1px solid #334155; border-radius: 10px;
+    padding: 16px 18px; overflow-x: auto; margin: 14px 0;
+  }
+  pre code { background: none; color: #e2e8f0; padding: 0; font-size: 0.85rem; line-height: 1.5; display: block; }
+  .tip {
+    background: rgba(232,163,61,0.1); border-left: 4px solid #e8a33d;
+    padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #fde68a; font-size: 0.92rem;
+  }
+  .warn {
+    background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444;
+    padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #fca5a5; font-size: 0.92rem;
+  }
+  .ok {
+    background: rgba(34,197,94,0.1); border-left: 4px solid #22c55e;
+    padding: 12px 16px; border-radius: 6px; margin: 16px 0; color: #86efac; font-size: 0.92rem;
+  }
+  .faq {
+    border: 1px solid #334155; border-radius: 10px; padding: 16px 18px;
+    margin-bottom: 12px; background: #16213a;
+  }
+  .faq .q { font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+  .faq .a { color: #cbd5e1; font-size: 0.95rem; }
+  footer { text-align: center; color: #64748b; padding: 30px; font-size: 0.85rem; border-top: 1px solid #334155; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+  th, td { border: 1px solid #334155; padding: 8px 12px; text-align: left; color: #cbd5e1; }
+  th { background: #0f172a; color: #e8a33d; }
+  @media (max-width: 640px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.6rem; }
+    section { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">CONHECIMENTO INTERNO</div>
+  <h1>🐍 Memorial Monteiro</h1>
+  <p>Ambiente Virtual Python (venv) — o que é, quando criar e como fazer, passo a passo.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#oque">O que é</a>
+    <a href="#quando">Quando criar</a>
+    <a href="#parte1">1. Criar</a>
+    <a href="#parte2">2. Ativar</a>
+    <a href="#parte3">3. Instalar libs</a>
+    <a href="#parte4">4. Sair/Voltar</a>
+    <a href="#faq">Dúvidas</a>
+    <a href="#resumo">Resumo Rápido</a>
+  </div>
+
+  <section id="oque">
+    <div class="step-head">
+      <div class="step-num">★</div>
+      <h2>O que é um ambiente virtual (venv)?</h2>
+    </div>
+    <p>É uma <strong>pasta isolada</strong> dentro do seu projeto que tem sua própria cópia do Python e das bibliotecas instaladas. Assim, cada projeto pode ter versões diferentes de bibliotecas sem conflitar com outros projetos ou com o Python "global" do computador.</p>
+    <div class="tip">💡 Pense assim: cada projeto Python importante merece sua "caixa de ferramentas" própria, sem misturar com a de outro projeto.</div>
+  </section>
+
+  <section id="quando">
+    <div class="step-head">
+      <div class="step-num">?</div>
+      <h2>Quando criar um ambiente virtual?</h2>
+    </div>
+    <table>
+      <tr><th>Situação</th><th>Criar venv?</th></tr>
+      <tr><td>Começando um projeto novo (script de agenda, automação, etc.)</td><td>✅ Sim, sempre</td></tr>
+      <tr><td>Projeto que usa bibliotecas externas (numpy, matplotlib, google-api, etc.)</td><td>✅ Sim</td></tr>
+      <tr><td>Script simples, de uma linha, sem biblioteca externa</td><td>Opcional</td></tr>
+      <tr><td>Vai dar o projeto para outra pessoa / rodar em outro computador</td><td>✅ Sim (facilita recriar o ambiente)</td></tr>
+    </table>
+    <div class="warn">⚠️ Nunca instale bibliotecas direto no Python "global" do Windows para projetos sérios — isso gera conflito quando dois projetos pedem versões diferentes da mesma biblioteca.</div>
+  </section>
+
+  <section id="parte1">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <h2>Criar o ambiente virtual</h2>
+    </div>
+    <p>Abra o terminal (PowerShell) na pasta do seu projeto, por exemplo:</p>
+    <pre><code>cd C:\PilaresPython</code></pre>
+    <p>Rode o comando que cria a pasta <code>.venv</code> com o ambiente isolado:</p>
+    <pre><code>python -m venv .venv</code></pre>
+    <div class="ok">✅ Isso cria uma pasta <code>.venv</code> dentro do projeto. Você só faz isso <strong>uma vez por projeto</strong>.</div>
+  </section>
+
+  <section id="parte2">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <h2>Ativar o ambiente virtual</h2>
+    </div>
+    <p>Toda vez que for trabalhar no projeto, ative o ambiente:</p>
+    <pre><code>.venv\Scripts\activate</code></pre>
+    <p>Se der certo, o prompt do terminal muda e passa a mostrar <code>(.venv)</code> no início da linha:</p>
+    <pre><code>(.venv) PS C:\PilaresPython&gt;</code></pre>
+    <div class="warn">⚠️ Se o PowerShell bloquear com erro de "política de execução", rode uma vez:
+<br><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></div>
+  </section>
+
+  <section id="parte3">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <h2>Instalar bibliotecas dentro do ambiente</h2>
+    </div>
+    <p>Com o <code>(.venv)</code> ativo, instale só o que esse projeto precisa:</p>
+    <pre><code>pip install numpy matplotlib</code></pre>
+    <p>Para o projeto da Agenda Google, por exemplo:</p>
+    <pre><code>pip install google-auth-oauthlib google-api-python-client</code></pre>
+    <div class="tip">💡 Cada projeto tem sua própria lista de bibliotecas — instalar aqui dentro não afeta outros projetos nem o Python global.</div>
+
+    <h3>Guardar a lista de bibliotecas (opcional, mas recomendado)</h3>
+    <pre><code>pip freeze > requirements.txt</code></pre>
+    <p>Isso salva um arquivo com todas as bibliotecas e versões usadas. Em outro computador, basta rodar:</p>
+    <pre><code>pip install -r requirements.txt</code></pre>
+  </section>
+
+  <section id="parte4">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <h2>Saindo e voltando ao ambiente</h2>
+    </div>
+    <div class="grid2">
+      <div class="ok">✅ <strong>Para sair:</strong><br><code>deactivate</code></div>
+      <div class="ok">✅ <strong>Para voltar depois:</strong><br><code>cd C:\PilaresPython</code><br><code>.venv\Scripts\activate</code></div>
+    </div>
+    <p>Repare: você só <strong>cria</strong> o ambiente (<code>python -m venv .venv</code>) uma vez. Depois disso é só <strong>ativar</strong> e <strong>desativar</strong> quando for usar.</p>
+  </section>
+
+  <section id="faq">
+    <div class="step-head">
+      <div class="step-num">?</div>
+      <h2>Dúvidas Frequentes</h2>
+    </div>
+
+    <div class="faq">
+      <div class="q">Se eu apagar a pasta .venv, perco meu código?</div>
+      <div class="a"><strong>Não.</strong> O <code>.venv</code> só guarda o Python e as bibliotecas instaladas. Seu código (os arquivos <code>.py</code>) fica fora dessa pasta, no projeto. Se apagar o <code>.venv</code>, só precisa criar de novo e reinstalar as bibliotecas.</div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Preciso criar um venv novo para cada script?</div>
+      <div class="a">Não necessariamente. Se os scripts fazem parte do mesmo projeto (ex: automações da agenda), pode usar o mesmo <code>.venv</code> para todos eles. Crie um venv novo quando o projeto for de outra natureza ou precisar de versões diferentes de bibliotecas.</div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Como sei se estou "dentro" ou "fora" do ambiente virtual?</div>
+      <div class="a">Olhe o início da linha do terminal. Se aparecer <code>(.venv)</code> antes do caminho da pasta, você está dentro. Se não aparecer, está usando o Python global do Windows.</div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Posso ter vários ambientes virtuais no mesmo computador?</div>
+      <div class="a">Sim, sem limite. Cada pasta de projeto pode (e deve) ter o seu próprio <code>.venv</code>, totalmente isolado dos outros.</div>
+    </div>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head">
+      <div class="step-num">✓</div>
+      <h2>Resumo Rápido para o Dia a Dia</h2>
+    </div>
+    <p><strong>Criando um projeto novo (primeira vez):</strong></p>
+    <ol>
+      <li><code>cd C:\CaminhoDoProjeto</code></li>
+      <li><code>python -m venv .venv</code></li>
+      <li><code>.venv\Scripts\activate</code></li>
+      <li><code>pip install bibliotecas-que-precisar</code></li>
+    </ol>
+    <p><strong>Voltando a um projeto já existente:</strong></p>
+    <ol>
+      <li><code>cd C:\CaminhoDoProjeto</code></li>
+      <li><code>.venv\Scripts\activate</code></li>
+      <li>Rodar o script: <code>python nome_do_script.py</code></li>
+    </ol>
+    <div class="tip">A criação (passo 1 e 2 do primeiro bloco) só é feita uma vez por projeto. No dia a dia, você só ativa e roda.</div>
+  </section>
+
+</div>
+
+<footer>Memorial Monteiro · Conhecimento interno · Ambiente Virtual Python (venv)</footer>
+
+</body>
+</html>

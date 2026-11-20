@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Aula 01</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',Tahoma,sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%); padding:50px 30px 40px; text-align:center; border-bottom:4px solid #e8a33d; }
+  .hero h1 { font-size:2.2rem; margin:0 0 6px; color:#f8fafc; }
+  .hero .badge { display:inline-block; background:#e8a33d; color:#1e293b; font-weight:700; padding:4px 14px; border-radius:20px; font-size:.8rem; letter-spacing:1px; margin-bottom:14px; }
+  .hero p { color:#94a3b8; max-width:640px; margin:0 auto; }
+  .hero .meta { margin-top:10px; font-size:.78rem; color:#94a3b8; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .steps-nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .steps-nav a { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:.85rem; transition:.2s; }
+  .steps-nav a:hover { background:#e8a33d; color:#1e293b; border-color:#e8a33d; }
+  section { background:#1e293b; border-radius:14px; padding:30px 32px; margin-bottom:26px; border:1px solid #334155; scroll-margin-top:20px; }
+  .step-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .step-num { background:#e8a33d; color:#1e293b; font-weight:800; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  section h2 { margin:0; font-size:1.35rem; color:#f8fafc; }
+  section h3 { color:#e8a33d; font-size:1.02rem; margin:20px 0 10px; }
+  p { color:#cbd5e1; margin:10px 0; }
+  ol,ul { color:#cbd5e1; padding-left:22px; }
+  li { margin-bottom:6px; }
+  code { background:#0f172a; color:#7dd3fc; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:.9em; }
+  .eq { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:14px 18px; margin:14px 0; text-align:center; overflow-x:auto; }
+  .tip { background:rgba(232,163,61,.1); border-left:4px solid #e8a33d; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fde68a; font-size:.92rem; }
+  .warn { background:rgba(239,68,68,.1); border-left:4px solid #ef4444; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fca5a5; font-size:.92rem; }
+  .ok { background:rgba(34,197,94,.1); border-left:4px solid #22c55e; padding:12px 16px; border-radius:6px; margin:16px 0; color:#86efac; font-size:.92rem; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  th,td { border:1px solid #334155; padding:8px 12px; text-align:left; color:#cbd5e1; }
+  th { background:#0f172a; color:#e8a33d; }
+  .checklist { border:1px solid #334155; border-radius:10px; padding:16px 18px; background:#16213a; }
+  .checklist label { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; color:#cbd5e1; cursor:pointer; }
+  footer { text-align:center; color:#64748b; padding:30px; font-size:.85rem; border-top:1px solid #334155; }
+  @media (max-width:640px) { .hero h1 { font-size:1.6rem; } section { padding:22px 18px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">MEMORIAL MONTEIRO</div>
+  <h1>📐 Aula 01 — Pilares em Python</h1>
+  <p>Problema, escopo e convenções do verificador de flexo-compressão oblíqua (FCO) no ELU.</p>
+  <p class="meta">Curso "Pilares em Python — Parte I" · Prof. Ricardo Corsini · Revisão de estudo — Eng. Luciano Monteiro</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#pergunta">1. Pergunta Central</a>
+    <a href="#criticas">2. Seções Críticas</a>
+    <a href="#sdrd">3. Sd vs Rd</a>
+    <a href="#momentos">4. Origem dos Momentos</a>
+    <a href="#casos">5. Três Casos</a>
+    <a href="#interacao">6. Interação</a>
+    <a href="#hipoteses">7. Hipóteses</a>
+    <a href="#sinais">8. Eixos e Sinais</a>
+    <a href="#unidades">9. Unidades</a>
+    <a href="#limite">10. Limite da Versão</a>
+    <a href="#fluxo">11. Fluxo do Algoritmo</a>
+    <a href="#resumo">✓ Resumo Rápido</a>
+  </div>
+
+  <section id="pergunta">
+    <div class="step-head"><div class="step-num">1</div><h2>A Pergunta Central do Curso</h2></div>
+    <p>Conhecidos <strong>geometria, materiais, armaduras</strong> e <strong>esforços de cálculo</strong>, essa seção de concreto armado resiste à combinação de força normal + momentos nos dois eixos?</p>
+    <div class="warn">⚠️ O curso trata <strong>só da resistência da seção transversal</strong> no ELU. Fora do escopo: obtenção dos esforços, estabilidade global, segunda ordem, esbeltez — isso é análise estrutural, não verificação seccional.</div>
+  </section>
+
+  <section id="criticas">
+    <div class="step-head"><div class="step-num">2</div><h2>Por que Escolher Seções Críticas</h2></div>
+    <p>O momento máximo no pilar pode estar no meio do lance, não necessariamente no topo/base, por causa do efeito de 2ª ordem:</p>
+    <div class="eq">$$M_{tot,Sd}(z) = M_{I,Sd}(z) + \Delta M_{II,Sd}(z)$$</div>
+    <div class="tip">💡 O programa <strong>recebe os esforços já definidos</strong> — não calcula onde está a seção crítica. Isso é trabalho da análise estrutural, feita antes.</div>
+  </section>
+
+  <section id="sdrd">
+    <div class="step-head"><div class="step-num">3</div><h2>Solicitação (Sd) vs. Resistência (Rd)</h2></div>
+    <div class="eq">$$S_d \leq R_d$$</div>
+    <table>
+      <tr><th>Sd</th><th>Rd</th></tr>
+      <tr><td>O que a seção precisa suportar (vem da análise estrutural)</td><td>O que a seção consegue mobilizar (vem da geometria, materiais, armaduras)</td></tr>
+    </table>
+    <p>Vetor de esforços:</p>
+    <div class="eq">$$S_d = \begin{bmatrix} N_{Sd} \\ M_{x,Sd} \\ M_{y,Sd} \end{bmatrix}$$</div>
+    <div class="warn">⚠️ Torção e cortante <strong>não entram</strong> nesse motor — só força normal e momentos fletores.</div>
+  </section>
+
+  <section id="momentos">
+    <div class="step-head"><div class="step-num">4</div><h2>De Onde Vêm os Momentos</h2></div>
+    <p>Não é só "carga excêntrica". Podem vir de: continuidade com vigas, ações horizontais (vento), imperfeições geométricas, efeitos de 2ª ordem.</p>
+    <p>Relação de excentricidade equivalente:</p>
+    <div class="eq">$$M_{x,Sd} = N_{Sd} \cdot e_y \qquad M_{y,Sd} = N_{Sd} \cdot e_x$$</div>
+  </section>
+
+  <section id="casos">
+    <div class="step-head"><div class="step-num">5</div><h2>Três Casos Típicos (Seção Simétrica)</h2></div>
+    <table>
+      <tr><th>Caso</th><th>Condição</th></tr>
+      <tr><td>Compressão centrada</td><td>$M_x = M_y = 0$</td></tr>
+      <tr><td>Flexocompressão normal</td><td>$M_x = 0,\ M_y \neq 0$</td></tr>
+      <tr><td>Flexocompressão oblíqua</td><td>$M_x \neq 0,\ M_y \neq 0$ ← foco do curso</td></tr>
+    </table>
+  </section>
+
+  <section id="interacao">
+    <div class="step-head"><div class="step-num">6</div><h2>Segurança é Interação, Não 3 Checagens Isoladas</h2></div>
+    <div class="eq">$$S_d \in R_d$$</div>
+    <p>Não basta checar se $N$, $M_x$, $M_y$ estão abaixo dos seus máximos individuais — eles <strong>interagem</strong>. Fixando $N$, corta-se o domínio 3D e analisa-se a curva no plano $M_x$–$M_y$.</p>
+  </section>
+
+  <section id="hipoteses">
+    <div class="step-head"><div class="step-num">7</div><h2>As 5 Hipóteses Clássicas do Modelo</h2></div>
+    <ol>
+      <li>Seções planas permanecem planas (deformação varia linear na seção)</li>
+      <li>Aderência perfeita entre concreto e aço (mesma deformação, não mesma tensão)</li>
+      <li>Leis constitutivas de cálculo (deformação → tensão, por material)</li>
+      <li>Concreto tracionado não resiste no ELU (tensão nula em tração)</li>
+      <li>Limites de deformação definem os estados-limite admissíveis</li>
+    </ol>
+    <h3>Método das fibras (coração do algoritmo)</h3>
+    <div class="eq">$$\varepsilon_i \rightarrow \sigma_i = \sigma(\varepsilon_i) \rightarrow F_i = \sigma_i A_i \rightarrow (N, M_x, M_y)$$</div>
+  </section>
+
+  <section id="sinais">
+    <div class="step-head"><div class="step-num">8</div><h2>Convenção de Eixos e Sinais</h2></div>
+    <ul>
+      <li>Origem: <strong>centroide geométrico</strong></li>
+      <li><strong>Compressão positiva, tração negativa</strong> (vale para tensão, deformação e força normal)</li>
+    </ul>
+    <div class="eq">$$N_{Rd} = \sum F_i \qquad M_{x,Rd} = \sum F_i y_i \qquad M_{y,Rd} = \sum F_i x_i$$</div>
+  </section>
+
+  <section id="unidades">
+    <div class="step-head"><div class="step-num">9</div><h2>Unidades (Contrato do Código)</h2></div>
+    <table>
+      <tr><th>Grandeza</th><th>Unidade interna</th></tr>
+      <tr><td>Coordenadas</td><td>mm</td></tr>
+      <tr><td>Áreas</td><td>mm²</td></tr>
+      <tr><td>Tensões</td><td>MPa (N/mm²)</td></tr>
+      <tr><td>Forças</td><td>N</td></tr>
+      <tr><td>Momentos</td><td>N·mm</td></tr>
+      <tr><td>Deformações</td><td>adimensional (2,5‰ = 0,0025)</td></tr>
+    </table>
+    <p>Conversões finais: $N[kN] = N[N]/10^3$ e $M[kN\cdot m] = M[N\cdot mm]/10^6$.</p>
+  </section>
+
+  <section id="limite">
+    <div class="step-head"><div class="step-num">10</div><h2>Limite Desta Versão do Programa</h2></div>
+    <div class="warn">⚠️ Só trabalha com $N_{Sd} \geq 0$ (compressão). Tração normal resultante ($N_{Sd}<0$) está <strong>fora do escopo</strong> desta edição.</div>
+  </section>
+
+  <section id="fluxo">
+    <div class="step-head"><div class="step-num">11</div><h2>Fluxo Geral do Algoritmo</h2></div>
+    <p>Geometria/materiais/barras + $N_{Sd}$ → escolhe orientação → busca estado-limite que zere o resíduo $g = N_{Rd} - N_{Sd}$ → obtém $(M_{x,Rd}, M_{y,Rd})$ → ponto da curva.</p>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head"><div class="step-num">✓</div><h2>Resumo Rápido para Revisão</h2></div>
+    <div class="checklist">
+      <label><input type="checkbox"> O curso só verifica a <strong>seção transversal</strong> no ELU, não faz análise estrutural</label>
+      <label><input type="checkbox"> $S_d \leq R_d$, com vetor $[N_{Sd}, M_{x,Sd}, M_{y,Sd}]$ — sem cortante/torção</label>
+      <label><input type="checkbox"> Segurança é <strong>interação</strong>, não checagem isolada de N, Mx, My</label>
+      <label><input type="checkbox"> 5 hipóteses: planas, aderência perfeita, leis constitutivas, concreto sem tração, limites de deformação</label>
+      <label><input type="checkbox"> Método das fibras: $\varepsilon \rightarrow \sigma \rightarrow F \rightarrow (N, M_x, M_y)$</label>
+      <label><input type="checkbox"> Compressão positiva, tração negativa; origem no centroide</label>
+      <label><input type="checkbox"> Unidades internas: mm, mm², MPa, N, N·mm, deformação adimensional</label>
+      <label><input type="checkbox"> Versão atual só trata $N_{Sd} \geq 0$</label>
+    </div>
+  </section>
+
+</div>
+
+<footer>Memorial Monteiro · Revisão de estudo · Pilares em Python — Aula 01</footer>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro — Aula 02</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',Tahoma,sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%); padding:50px 30px 40px; text-align:center; border-bottom:4px solid #e8a33d; }
+  .hero .badge { display:inline-block; background:#e8a33d; color:#1e293b; font-weight:700; padding:4px 14px; border-radius:20px; font-size:.8rem; letter-spacing:1px; margin-bottom:14px; }
+  .hero h1 { font-size:2.2rem; margin:0 0 6px; color:#f8fafc; }
+  .hero .prof { color:#7dd3fc; font-size:.95rem; margin-bottom:10px; }
+  .hero p { color:#94a3b8; max-width:640px; margin:0 auto; font-size:1rem; }
+  .wrap { max-width:880px; margin:0 auto; padding:40px 24px 80px; }
+  .steps-nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .steps-nav a { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:.85rem; transition:.2s; }
+  .steps-nav a:hover { background:#e8a33d; color:#1e293b; border-color:#e8a33d; }
+  section { background:#1e293b; border-radius:14px; padding:30px 32px; margin-bottom:26px; border:1px solid #334155; scroll-margin-top:20px; }
+  .step-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .step-num { background:#e8a33d; color:#1e293b; font-weight:800; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  section h2 { margin:0; font-size:1.35rem; color:#f8fafc; }
+  section h3 { color:#e8a33d; font-size:1.05rem; margin:22px 0 10px; }
+  p { color:#cbd5e1; margin:10px 0; }
+  ul,ol { color:#cbd5e1; padding-left:22px; }
+  li { margin-bottom:6px; }
+  code { background:#0f172a; color:#7dd3fc; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:.9em; }
+  pre { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:16px 18px; overflow-x:auto; margin:14px 0; }
+  pre code { background:none; color:#e2e8f0; padding:0; font-size:.83rem; line-height:1.5; display:block; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:.9rem; }
+  th,td { border:1px solid #334155; padding:8px 10px; text-align:left; }
+  th { background:#0f172a; color:#e8a33d; }
+  .tip { background:rgba(232,163,61,.1); border-left:4px solid #e8a33d; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fde68a; font-size:.92rem; }
+  .warn { background:rgba(239,68,68,.1); border-left:4px solid #ef4444; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fca5a5; font-size:.92rem; }
+  footer { text-align:center; color:#64748b; padding:30px; font-size:.85rem; border-top:1px solid #334155; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">MEMORIAL MONTEIRO</div>
+  <h1>Aula 02 — Materiais no Estado-Limite Último</h1>
+  <p class="prof">Professor Ricardo Corsini</p>
+  <p>Resumo técnico e base de código Python — leis constitutivas do concreto e do aço no ELU.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#concreto">Concreto</a>
+    <a href="#aco">Aço</a>
+    <a href="#limites">Limites Normativos</a>
+    <a href="#conferencia">Valores de Conferência</a>
+    <a href="#arquitetura">Arquitetura do Código</a>
+  </div>
+
+  <section id="concreto">
+    <div class="step-head"><div class="step-num">1</div><h2>Lei Constitutiva do Concreto</h2></div>
+    <p>Resistência de cálculo:</p>
+    <p>$$ f_{cd} = \frac{f_{ck}}{\gamma_c}, \quad \gamma_c = 1{,}40 $$</p>
+    <p>Tensão do patamar plástico:</p>
+    <p>$$ \sigma_{c,plat} = 0{,}85\,\eta_c\,f_{cd} $$</p>
+    <p>Fator de redução $$\eta_c$$:</p>
+    <table>
+      <tr><th>Faixa de $$f_{ck}$$</th><th>$$\eta_c$$</th></tr>
+      <tr><td>$$\leq 40$$ MPa</td><td>$$1{,}0$$</td></tr>
+      <tr><td>$$> 40$$ MPa</td><td>$$(40/f_{ck})^{1/3}$$</td></tr>
+    </table>
+    <p>Diagrama tensão-deformação por trecho de deformação $$\varepsilon_c$$:</p>
+    <ul>
+      <li>$$\varepsilon_c \leq 0$$ → $$\sigma_c = 0$$ (sem tração no concreto)</li>
+      <li>$$0 < \varepsilon_c < \varepsilon_{c2}$$ → ramo parabólico/curvo (expoente $$n$$)</li>
+      <li>$$\varepsilon_{c2} \leq \varepsilon_c \leq \varepsilon_{cu}$$ → patamar constante $$\sigma_{c,plat}$$</li>
+    </ul>
+    <div class="warn">⚠️ A função de tensão <strong>não valida</strong> admissibilidade: se $$\varepsilon_c > \varepsilon_{cu}$$, ela pode devolver o patamar numericamente, mas esse estado é inválido e deve ser filtrado por outra camada (estado-limite / integração).</div>
+  </section>
+
+  <section id="aco">
+    <div class="step-head"><div class="step-num">2</div><h2>Lei Constitutiva do Aço (CA-50)</h2></div>
+    <p>Comportamento elastoplástico perfeito, simétrico em tração e compressão:</p>
+    <p>$$ f_{yd} = \frac{f_{yk}}{\gamma_s}, \quad \gamma_s = 1{,}15, \quad E_s = 210000 \text{ MPa} $$</p>
+    <p>$$ \varepsilon_{yd} = \frac{f_{yd}}{E_s} $$</p>
+    <p>Tensão em função da deformação:</p>
+    <p>$$ \sigma_s = \text{clip}(E_s\,\varepsilon_s,\ -f_{yd},\ +f_{yd}) $$</p>
+    <div class="tip">💡 Implementação vetorial direta com <code>np.clip</code> — preserva o sinal da deformação automaticamente.</div>
+  </section>
+
+  <section id="limites">
+    <div class="step-head"><div class="step-num">3</div><h2>Parâmetros de Forma por Faixa de Resistência</h2></div>
+    <table>
+      <tr><th>Faixa</th><th>$$n$$</th><th>$$\varepsilon_{c2}$$</th><th>$$\varepsilon_{cu}$$</th></tr>
+      <tr><td>$$f_{ck} \leq 50$$ MPa</td><td>2</td><td>0,0020</td><td>0,0035</td></tr>
+      <tr><td>$$50 < f_{ck} \leq 90$$ MPa</td><td>fórmula da apostila</td><td>fórmula da apostila</td><td>fórmula da apostila</td></tr>
+    </table>
+    <p>C50 ainda usa os parâmetros de forma da faixa "até 50", mas já aplica a redução de $$\eta_c$$ pois $$f_{ck}=50>40$$.</p>
+  </section>
+
+  <section id="conferencia">
+    <div class="step-head"><div class="step-num">4</div><h2>Valores de Conferência</h2></div>
+    <table>
+      <tr><th>Caso</th><th>Resultado esperado</th></tr>
+      <tr><td>C30 — $$\sigma_{c,plat}$$</td><td>≈ 18,21 MPa</td></tr>
+      <tr><td>C30 — $$\sigma_c(0{,}001)$$</td><td>≈ 13,66 MPa</td></tr>
+      <tr><td>CA-50 — $$f_{yd}$$</td><td>≈ 434,78 MPa</td></tr>
+      <tr><td>CA-50 — $$\varepsilon_{yd}$$</td><td>≈ 0,002070</td></tr>
+    </table>
+    <div class="warn">Deformações no código são adimensionais: 1‰ = <code>0.001</code>. Não confundir com porcentagem.</div>
+  </section>
+
+  <section id="arquitetura">
+    <div class="step-head"><div class="step-num">5</div><h2>Arquitetura do Código</h2></div>
+    <p>Módulo <code>codigo/materiais.py</code> com três funções:</p>
+    <ul>
+      <li><code>parametros_concreto(fck)</code> → retorna $$f_{cd}$$, $$\eta_c$$, $$n$$, $$\varepsilon_{c2}$$, $$\varepsilon_{cu}$$, $$\sigma_{c,plat}$$</li>
+      <li><code>tensao_concreto(eps_c, params)</code> → tensão vetorizada do concreto</li>
+      <li><code>tensao_aco(eps_s, fyk, Es=210000, gamma_s=1.15)</code> → tensão vetorizada do aço</li>
+    </ul>
+    <p>Testes em <code>codigo/testes/test_materiais.py</code>, validando os valores de conferência acima. Código completo no artefato <strong>"Módulo materiais.py — Aula 02"</strong>, pronto para colar no projeto.</p>
+    <div class="tip">Essa separação (leis constitutivas isoladas) é a base do futuro motor de cálculo: estados-limite, integração por fibras e busca de equilíbrio virão em módulos separados, reaproveitando este.</div>
+  </section>
+
+</div>
+<footer>Memorial Monteiro · Curso Pilares em Python — Prof. Ricardo Corsini · Aula 02 · Base para motor de cálculo autoral</footer>
+</body>
+</html>

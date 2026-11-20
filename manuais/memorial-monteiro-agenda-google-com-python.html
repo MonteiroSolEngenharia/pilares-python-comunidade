@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Memorial Monteiro</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    padding: 50px 30px 40px;
+    text-align: center;
+    border-bottom: 4px solid #e8a33d;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    margin: 0 0 6px;
+    color: #f8fafc;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #e8a33d;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .hero p {
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .steps-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .steps-nav a {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: .2s;
+  }
+  .steps-nav a:hover { background: #e8a33d; color: #1e293b; border-color: #e8a33d; }
+
+  section {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 30px 32px;
+    margin-bottom: 26px;
+    border: 1px solid #334155;
+    scroll-margin-top: 20px;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .step-num {
+    background: #e8a33d;
+    color: #1e293b;
+    font-weight: 800;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  section h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #f8fafc;
+  }
+  section h3 {
+    color: #e8a33d;
+    font-size: 1.05rem;
+    margin: 22px 0 10px;
+  }
+  p { color: #cbd5e1; margin: 10px 0; }
+  ol, ul { color: #cbd5e1; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code {
+    background: #0f172a;
+    color: #7dd3fc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
+  }
+  pre {
+    background: #0b1220;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 14px 0;
+  }
+  pre code {
+    background: none;
+    color: #e2e8f0;
+    padding: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: block;
+  }
+  .tip {
+    background: rgba(232,163,61,0.1);
+    border-left: 4px solid #e8a33d;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    color: #fde68a;
+    font-size: 0.92rem;
+  }
+  .warn {
+    background: rgba(239,68,68,0.1);
+    border-left: 4px solid #ef4444;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    color: #fca5a5;
+    font-size: 0.92rem;
+  }
+  .ok {
+    background: rgba(34,197,94,0.1);
+    border-left: 4px solid #22c55e;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    color: #86efac;
+    font-size: 0.92rem;
+  }
+  .faq {
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    background: #16213a;
+  }
+  .faq .q {
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 6px;
+  }
+  .faq .a { color: #cbd5e1; font-size: 0.95rem; }
+  footer {
+    text-align: center;
+    color: #64748b;
+    padding: 30px;
+    font-size: 0.85rem;
+    border-top: 1px solid #334155;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  @media (max-width: 640px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.7rem; }
+    section { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">CONHECIMENTO INTERNO</div>
+  <h1>📅 Memorial Monteiro</h1>
+  <p>Como automatizar o Google Agenda com Python — guia passo a passo para estagiários, equipe e família.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#visao">Visão Geral</a>
+    <a href="#parte1">1. Google Cloud</a>
+    <a href="#parte2">2. Ambiente Python</a>
+    <a href="#parte3">3. Script</a>
+    <a href="#parte4">4. Executar</a>
+    <a href="#faq">Dúvidas</a>
+    <a href="#resumo">Resumo Rápido</a>
+  </div>
+
+  <section id="visao">
+    <div class="step-head">
+      <div class="step-num">★</div>
+      <h2>Visão Geral do Processo</h2>
+    </div>
+    <p>Esse fluxo tem 4 partes:</p>
+    <ol>
+      <li><strong>Google Cloud Console</strong> → criar um "projeto" e autorizar seu app a acessar o Google Calendar (arquivo <code>credentials.json</code>).</li>
+      <li><strong>Ambiente Python</strong> → instalar as bibliotecas do Google.</li>
+      <li><strong>Script Python</strong> → lista de eventos + código que envia para a API do Google.</li>
+      <li><strong>Autenticação</strong> → primeira execução abre o navegador para autorizar; depois fica salvo um token e não pede de novo.</li>
+    </ol>
+  </section>
+
+  <section id="parte1">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <h2>Criar credenciais no Google Cloud</h2>
+    </div>
+    <ol>
+      <li>Acesse <code>console.cloud.google.com</code></li>
+      <li>Crie um novo projeto (ou use um existente)</li>
+      <li>Menu lateral → <strong>APIs e Serviços</strong> → <strong>Biblioteca</strong></li>
+      <li>Pesquise <strong>"Google Calendar API"</strong> → clique <strong>Ativar</strong></li>
+      <li>Vá em <strong>APIs e Serviços</strong> → <strong>Tela de consentimento OAuth</strong>
+        <ul>
+          <li>Tipo de usuário: <strong>Externo</strong></li>
+          <li>Preencha nome do app, e-mail de suporte, etc.</li>
+          <li>Em <strong>"Usuários de teste"</strong>, adicione o e-mail da conta Google da agenda</li>
+        </ul>
+      </li>
+      <li>Vá em <strong>Credenciais</strong> → <strong>Criar Credenciais</strong> → <strong>ID do cliente OAuth</strong>
+        <ul>
+          <li>Tipo de aplicativo: <strong>App para computador (Desktop)</strong></li>
+          <li>Dê um nome, crie</li>
+        </ul>
+      </li>
+      <li>Clique em <strong>baixar JSON</strong> — esse arquivo é o <code>credentials.json</code></li>
+      <li>Coloque esse arquivo <strong>na mesma pasta</strong> do script Python</li>
+    </ol>
+    <div class="warn">⚠️ O <code>credentials.json</code> dá acesso à conta Google via esse app — não compartilhe publicamente (não suba pra GitHub público, por exemplo).</div>
+  </section>
+
+  <section id="parte2">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <h2>Preparar o ambiente Python</h2>
+    </div>
+    <p>Na pasta do projeto, abra o terminal e rode:</p>
+    <pre><code>pip install google-auth-oauthlib google-api-python-client</code></pre>
+  </section>
+
+  <section id="parte3">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <h2>Estrutura do Script</h2>
+    </div>
+    <p>O script tem 3 blocos principais:</p>
+
+    <h3>Bloco A — Autenticação (não precisa tocar)</h3>
+    <pre><code>from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
+import os
+
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+def autenticar():
+    creds = None
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
+    return build('calendar', 'v3', credentials=creds)</code></pre>
+
+    <h3>Bloco B — Lista de eventos (⭐ AQUI você edita para adicionar agendamentos)</h3>
+    <pre><code>eventos = [
+    {
+        "titulo": "Reunião com cliente",
+        "data": "2026-12-01",
+        "hora_inicio": "14:00",
+        "hora_fim": "15:00",
+    },
+    {
+        "titulo": "🔴 AO VIVO - Pilares em Python | Ciclo 07",
+        "data": "2026-11-26",
+        "hora_inicio": "20:00",
+        "hora_fim": "22:00",
+    },
+    # Para adicionar um evento novo, copie este bloco
+    # e coloque uma vírgula no final do anterior:
+    # {
+    #     "titulo": "Novo evento",
+    #     "data": "2026-12-05",
+    #     "hora_inicio": "19:00",
+    #     "hora_fim": "20:00",
+    # },
+]</code></pre>
+    <div class="tip">💡 <strong>Essa é a sua resposta principal:</strong> não cria outro script. Você sempre edita essa lista <code>eventos</code> — adiciona, remove ou muda itens aqui. O resto do código não muda.</div>
+
+    <h3>Bloco C — Envio para o Google Calendar</h3>
+    <pre><code>def criar_eventos(service, eventos):
+    for ev in eventos:
+        body = {
+            'summary': ev['titulo'],
+            'start': {
+                'dateTime': f"{ev['data']}T{ev['hora_inicio']}:00",
+                'timeZone': 'America/Sao_Paulo',
+            },
+            'end': {
+                'dateTime': f"{ev['data']}T{ev['hora_fim']}:00",
+                'timeZone': 'America/Sao_Paulo',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'popup', 'minutes': 24 * 60},
+                    {'method': 'popup', 'minutes': 60},
+                ],
+            },
+        }
+        criado = service.events().insert(calendarId='primary', body=body).execute()
+        print(f"✅ Criado: {ev['titulo']} ({ev['data']})")
+
+if __name__ == '__main__':
+    service = autenticar()
+    criar_eventos(service, eventos)</code></pre>
+  </section>
+
+  <section id="parte4">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <h2>Rodando o Script</h2>
+    </div>
+    <pre><code>cd D:\back-C\GM
+python agenda_pilares.py</code></pre>
+    <div class="grid2">
+      <div class="ok">✅ <strong>Primeira vez:</strong> abre navegador, você escolhe a conta Google e autoriza o acesso.</div>
+      <div class="ok">✅ <strong>Próximas vezes:</strong> usa o <code>token.json</code> salvo, não pede login de novo.</div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="step-head">
+      <div class="step-num">?</div>
+      <h2>Dúvidas Frequentes</h2>
+    </div>
+
+    <div class="faq">
+      <div class="q">Se eu mudar o código, ele apaga o que já está na agenda?</div>
+      <div class="a"><strong>Não.</strong> O comando usado é <code>events().insert()</code>, que só <strong>cria</strong> eventos novos. Nunca deleta ou sobrescreve o que já existe. Rodar o script duas vezes com a mesma lista gera eventos <strong>duplicados</strong>, não atualiza.</div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Como evito duplicar se rodar de novo?</div>
+      <div class="a">
+        1. <strong>Manual:</strong> depois de rodar, apague do script os eventos que já foram criados, deixando só os novos.<br>
+        2. <strong>Avançado:</strong> dar um ID fixo para cada evento e usar <code>events().update()</code> em vez de <code>insert()</code> quando o evento já existir.
+      </div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Preciso de outro script para outro tipo de agendamento?</div>
+      <div class="a">Não. O mesmo script serve — basta mudar a lista <code>eventos</code>. Se quiser organizar melhor, pode criar um script por "projeto de agenda" ou um script genérico que lê os eventos de um arquivo CSV/JSON separado.</div>
+    </div>
+
+    <div class="faq">
+      <div class="q">Como apagar um evento criado por erro?</div>
+      <div class="a">Mais simples: apague direto no Google Agenda pelo navegador/app, clicando no evento → Excluir. Não precisa de script para isso.</div>
+    </div>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head">
+      <div class="step-num">✓</div>
+      <h2>Resumo Rápido para o Dia a Dia</h2>
+    </div>
+    <p>Quando quiser adicionar novos agendamentos:</p>
+    <ol>
+      <li>Abra <code>agenda_pilares.py</code> no VS Code</li>
+      <li>Edite a lista <code>eventos</code> (adicione os novos blocos)</li>
+      <li>Salve</li>
+      <li>Rode: <code>python agenda_pilares.py</code></li>
+      <li>Confira no Google Agenda</li>
+    </ol>
+    <div class="tip">Não precisa repetir a autenticação (Parte 1) nem reinstalar nada (Parte 2) — isso só é feito uma vez.</div>
+  </section>
+
+</div>
+
+<footer>Memorial Monteiro · Conhecimento interno · Automação com Python & Google Calendar API</footer>
+
+</body>
+</html>

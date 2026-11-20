@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<title>Dicas do Monteiro — Git e GitHub</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',Tahoma,sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  .hero { background:linear-gradient(135deg,#1e3a5f 0%,#0f172a 100%); padding:50px 30px 40px; text-align:center; border-bottom:4px solid #e8a33d; }
+  .hero h1 { font-size:2.4rem; margin:0 0 6px; color:#f8fafc; }
+  .hero .badge { display:inline-block; background:#e8a33d; color:#1e293b; font-weight:700; padding:4px 14px; border-radius:20px; font-size:.8rem; letter-spacing:1px; margin-bottom:14px; }
+  .hero p { color:#94a3b8; max-width:620px; margin:0 auto; }
+  .wrap { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .steps-nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .steps-nav a { background:#1e293b; border:1px solid #334155; color:#cbd5e1; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:.85rem; transition:.2s; }
+  .steps-nav a:hover { background:#e8a33d; color:#1e293b; border-color:#e8a33d; }
+  section { background:#1e293b; border-radius:14px; padding:30px 32px; margin-bottom:26px; border:1px solid #334155; scroll-margin-top:20px; }
+  .step-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .step-num { background:#e8a33d; color:#1e293b; font-weight:800; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  section h2 { margin:0; font-size:1.4rem; color:#f8fafc; }
+  section h3 { color:#e8a33d; font-size:1.05rem; margin:22px 0 10px; }
+  p { color:#cbd5e1; margin:10px 0; }
+  ol,ul { color:#cbd5e1; padding-left:22px; }
+  li { margin-bottom:6px; }
+  code { background:#0f172a; color:#7dd3fc; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:.9em; }
+  pre { background:#0b1220; border:1px solid #334155; border-radius:10px; padding:16px 18px; overflow-x:auto; margin:14px 0; }
+  pre code { background:none; color:#e2e8f0; padding:0; font-size:.85rem; line-height:1.5; display:block; }
+  .tip { background:rgba(232,163,61,.1); border-left:4px solid #e8a33d; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fde68a; font-size:.92rem; }
+  .warn { background:rgba(239,68,68,.1); border-left:4px solid #ef4444; padding:12px 16px; border-radius:6px; margin:16px 0; color:#fca5a5; font-size:.92rem; }
+  .ok { background:rgba(34,197,94,.1); border-left:4px solid #22c55e; padding:12px 16px; border-radius:6px; margin:16px 0; color:#86efac; font-size:.92rem; }
+  .ex { background:rgba(59,130,246,.1); border-left:4px solid #3b82f6; padding:12px 16px; border-radius:6px; margin:16px 0; color:#93c5fd; font-size:.92rem; }
+  .faq { border:1px solid #334155; border-radius:10px; padding:16px 18px; margin-bottom:12px; background:#16213a; }
+  .faq .q { font-weight:700; color:#f8fafc; margin-bottom:6px; }
+  .faq .a { color:#cbd5e1; font-size:.95rem; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; }
+  th,td { border:1px solid #334155; padding:8px 12px; text-align:left; font-size:.9rem; color:#cbd5e1; }
+  th { background:#0f172a; color:#e8a33d; }
+  footer { text-align:center; color:#64748b; padding:30px; font-size:.85rem; border-top:1px solid #334155; }
+  @media (max-width:640px) { .hero h1 { font-size:1.7rem; } section { padding:22px 18px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">MEMORIAL MONTEIRO</div>
+  <h1>🐙 Monteiro Soluções em Engenharia</h1>
+  <p>Git e GitHub do zero — para quem instalou, salvou um arquivo há 2 meses e esqueceu tudo.</p>
+  <p style="margin-top:10px;font-size:0.78rem;color:#94a3b8;">📍 Salto, SP &bull; 📷 @monteiro.engenharia &bull; 💼 /in/lucianomonteiro &bull; ✉️ monteiro_projetos@yahoo.com.br &bull; 📞 (16) 99194-6578</p>
+</div>
+
+<div class="wrap">
+
+  <div class="steps-nav">
+    <a href="#conceito">Git vs GitHub</a>
+    <a href="#repo">Repositório</a>
+    <a href="#ciclo">Ciclo de Trabalho</a>
+    <a href="#exemplo">Exemplo Real</a>
+    <a href="#acesso">Público x Privado</a>
+    <a href="#retomar">Retomando após parar</a>
+    <a href="#faq">Dúvidas</a>
+    <a href="#resumo">Resumo Rápido</a>
+  </div>
+
+  <section id="conceito">
+    <div class="step-head"><div class="step-num">★</div><h2>Git vs GitHub — a confusão nº 1</h2></div>
+    <table>
+      <tr><th>Git</th><th>GitHub</th></tr>
+      <tr><td>Programa instalado no seu computador</td><td>Site que guarda uma cópia na nuvem</td></tr>
+      <tr><td>Guarda o histórico localmente</td><td>Permite acessar de qualquer lugar e compartilhar</td></tr>
+      <tr><td>Funciona sem internet</td><td>Precisa de internet para sincronizar</td></tr>
+    </table>
+    <p><strong>GitHub Desktop</strong> é só a interface visual para você não digitar comandos no terminal.</p>
+  </section>
+
+  <section id="repo">
+    <div class="step-head"><div class="step-num">1</div><h2>O que é um Repositório (repo)</h2></div>
+    <p>Um repositório é <strong>uma pasta do seu projeto</strong> que você "ligou" ao Git. Cada projeto seu = um repo separado.</p>
+    <div class="warn">⚠️ <strong>Não existe controle de acesso por pasta dentro do mesmo repo.</strong> Quem tem acesso ao repositório, vê tudo dentro dele. Para separar o que é público do que é privado, você precisa de <strong>repositórios diferentes</strong>.</div>
+    <pre><code>📁 propostas-comerciais-monteiro   → privado, só você
+📁 pilares-python-aulas            → público, comunidade
+📁 agenda-automatizada             → privado ou público, como preferir</code></pre>
+  </section>
+
+  <section id="ciclo">
+    <div class="step-head"><div class="step-num">2</div><h2>O ciclo básico: Commit → Push</h2></div>
+    <ol>
+      <li><strong>Edite</strong> os arquivos normalmente no VS Code</li>
+      <li><strong>Commit</strong> = tira uma "foto" do que mudou, com uma mensagem explicando</li>
+      <li><strong>Push</strong> = envia essa foto para a nuvem (GitHub.com)</li>
+    </ol>
+    <p>No GitHub Desktop, isso é 3 passos visuais:</p>
+    <ol>
+      <li>Aba <strong>Changes</strong> (esquerda) mostra os arquivos que mudaram</li>
+      <li>Escreva uma frase curta no campo <strong>Summary</strong></li>
+      <li>Clique em <strong>Commit to [branch]</strong> → depois <strong>Push origin</strong> (topo)</li>
+    </ol>
+    <div class="tip">💡 Dica de ouro: comite <strong>toda vez que terminar algo</strong>, mesmo pequeno. É isso que evita esquecer tudo depois de 2 meses.</div>
+  </section>
+
+  <section id="exemplo">
+    <div class="step-head"><div class="step-num">3</div><h2>Exemplo Real — sua tela atual</h2></div>
+    <p>Na sua captura de tela, você está exatamente no passo 2 do ciclo:</p>
+    <table>
+      <tr><th>Campo da tela</th><th>O que significa</th></tr>
+      <tr><td><code>Current repository: Propostas-Comerciais-Monteiro</code></td><td>O repo que está aberto agora</td></tr>
+      <tr><td><code>Current branch: feature/exemplo</code></td><td>Você está numa "ramificação" separada da principal — ótimo para testar sem bagunçar o <code>main</code></td></tr>
+      <tr><td><code>1 changed file → proposta_web.py</code></td><td>O Git detectou que esse arquivo é novo/mudou</td></tr>
+      <tr><td>Linhas verdes com <code>+</code></td><td>Tudo que foi <strong>adicionado</strong> (arquivo novo = tudo em verde)</td></tr>
+      <tr><td>Campo "Create proposta_web.py"</td><td>Onde você escreve a mensagem do commit (o Summary)</td></tr>
+      <tr><td>Botão azul "Commit 1 file to feature/exemplo"</td><td>Confirma a foto desse momento</td></tr>
+    </table>
+    <div class="ex">📌 <strong>O que fazer agora nessa tela:</strong> escreva algo como <code>Cria script inicial da proposta web</code> no campo Summary, clique no botão azul de commit, e depois procure o botão <strong>Push origin</strong> no topo para enviar pro GitHub.com.</div>
+    <div class="tip">💡 O aviso amarelo sobre "LF/CRLF" é só sobre tipo de quebra de linha entre Windows/Linux — pode ignorar, o Git resolve isso automaticamente.</div>
+  </section>
+
+  <section id="acesso">
+    <div class="step-head"><div class="step-num">4</div><h2>Público x Privado — dando acesso à comunidade</h2></div>
+    <p>Ao criar um repositório, o GitHub pergunta:</p>
+    <ul>
+      <li><strong>Public</strong>: qualquer pessoa no mundo vê, até sem conta</li>
+      <li><strong>Private</strong>: só você e quem for convidado</li>
+    </ul>
+    <div class="ok">✅ Solução para seu caso: crie um repo <strong>separado e público</strong> (ex: <code>pilares-python-aulas</code>) só com o que quer compartilhar com estagiários/comunidade. Seus projetos de trabalho (como o <code>Propostas-Comerciais-Monteiro</code>) ficam em repos <strong>privados</strong>.</div>
+    <h3>Dar acesso a pessoas específicas (sem ser público)</h3>
+    <p>Repo Private → aba <strong>Settings</strong> no GitHub.com → <strong>Collaborators</strong> → adicionar e-mail/usuário da pessoa.</p>
+  </section>
+
+  <section id="retomar">
+    <div class="step-head"><div class="step-num">5</div><h2>Retomando um repo esquecido há meses</h2></div>
+    <ol>
+      <li>Abra o <strong>GitHub Desktop</strong></li>
+      <li><strong>File → Add Local Repository</strong> → selecione a pasta antiga</li>
+      <li>Ele mostra tudo que mudou desde a última vez</li>
+      <li>Escreva uma mensagem tipo <code>Atualização após retomada do projeto</code> → Commit</li>
+      <li>Clique em <strong>Push origin</strong></li>
+    </ol>
+    <div class="tip">💡 A partir daí, retome o hábito: terminar algo relevante → commit + push, sempre.</div>
+  </section>
+
+  <section id="faq">
+    <div class="step-head"><div class="step-num">?</div><h2>Dúvidas Frequentes</h2></div>
+    <div class="faq"><div class="q">O que é essa "branch" (feature/exemplo)?</div><div class="a">É uma versão paralela do projeto, separada da principal (<code>main</code>). Serve para testar algo sem arriscar quebrar o que já funciona. Depois você pode "juntar" (merge) de volta no main quando estiver pronto.</div></div>
+    <div class="faq"><div class="q">Preciso dar push toda vez que faço commit?</div><div class="a">O commit só salva localmente. Sem o push, isso não vai para o GitHub.com — e some se você reinstalar o computador, por exemplo. Sempre dê push depois do commit.</div></div>
+    <div class="faq"><div class="q">Posso ter vários arquivos num commit só?</div><div class="a">Sim, o GitHub Desktop agrupa tudo que você mudou desde o último commit. Mas é boa prática comitar por "assunto" (ex: só o que é da proposta web, separado de outra mudança não relacionada).</div></div>
+    <div class="faq"><div class="q">Dei push errado ou quero desfazer algo, e agora?</div><div class="a">Dá para reverter — mas é mais delicado. Quando acontecer, me chame com o print da tela e eu te oriento o comando certo para não perder nada.</div></div>
+  </section>
+
+  <section id="resumo">
+    <div class="step-head"><div class="step-num">✓</div><h2>Resumo Rápido para o Dia a Dia</h2></div>
+    <ol>
+      <li>Editou algo importante → abra o GitHub Desktop</li>
+      <li>Veja os arquivos mudados na aba Changes</li>
+      <li>Escreva uma mensagem curta no Summary</li>
+      <li>Clique em Commit</li>
+      <li>Clique em Push origin</li>
+    </ol>
+    <div class="tip">Projeto que quer compartilhar com a comunidade → repo separado e público. Projeto de trabalho → repo privado.</div>
+  </section>
+
+</div>
+
+<footer>Dicas do Monteiro · Conhecimento interno · Git & GitHub na prática</footer>
+
+</body>
+</html>
